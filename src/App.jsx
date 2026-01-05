@@ -11,6 +11,7 @@ import Dialogs from "./components/Dialogs/Dialogs.jsx";
 import {Provider} from "react-redux";
 
 import store from "./store";
+import Users from "./components/Users/Users.jsx";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
             {path: "/profile", element: <Profile/>},
             {path: "/login", element: <Login/>},
             {path: "/dialogs", element: <Dialogs/>},
+            {path: "/users", element: <Users/>},
             {path: "*", element: <ErrorMessage/>}
         ]
     }

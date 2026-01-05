@@ -1,0 +1,15 @@
+.users__container {
+    display: flex;
+    gap: 100px;
+}
+
+.users__infomation {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.users__infomation__detail {
+    display: flex;
+    flex-direction: column;
+}
