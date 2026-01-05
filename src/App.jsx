@@ -1,18 +1,30 @@
 import './App.css';
 
-import Header from "./components/Header/Header.jsx";
-import Sidebar from "./components/Sidebar/Sidebar.jsx";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+
 import Profile from "./components/Profile/Profile.jsx";
+import Layout from "./components/Layout.jsx";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage.jsx";
+import Login from "./components/Login/Login.jsx";
+import Dialogs from "./components/Dialogs/Dialogs.jsx";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
+            {path: "/profile", element: <Profile />},
+            {path: "/login", element: <Login />},
+            {path: "/dialogs", element: <Dialogs />},
+            {path: "*", element: <ErrorMessage />}
+        ]
+    }
+]);
 
 const App = () => {
     return (
         <div className="app">
-            <Header />
-
-            <main className="main">
-                <Sidebar />
-                <Profile />
-            </main>
+            <RouterProvider router={router}></RouterProvider>
         </div>
     );
 }

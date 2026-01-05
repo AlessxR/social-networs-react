@@ -1,3 +1,6 @@
+a {
+    text-decoration: none;
+}
 
 .sidebar {
     background: green;
@@ -10,4 +13,13 @@
     gap: 20px;
     padding: 15px;
     list-style-type: none;
+}
+
+.active-link {
+    color: gold;
+    font-weight: bold;
+}
+
+.inactive-link {
+    color: gray;
 }

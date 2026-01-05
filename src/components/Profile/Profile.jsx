@@ -3,6 +3,7 @@ import './Profile.css';
 import Post from "./Post/Post.jsx";
 
 const Profile = () => {
+
     return (
         <div className="profile">
             <div className="profile__logo">
@@ -26,8 +27,13 @@ const Profile = () => {
 
                 <div className="profile__posts">
                     <h3>My posts</h3>
+                    <div className="profile__posts__add">
+                        <textarea />
+
+                        <button onClick={onAddPost}>Add new post</button>
+                    </div>
                     <div>
-                        <Post />
+                        <Post posts={posts} />
                     </div>
                 </div>
             </div>

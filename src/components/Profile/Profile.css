@@ -6,3 +6,8 @@
     display: flex;
     gap: 20px;
 }
+
+.profile__posts__add {
+    display: flex;
+    gap: 10px;
+}
