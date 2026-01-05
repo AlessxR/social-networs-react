@@ -1,0 +1,11 @@
+.app {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.main {
+    margin-top: 20px;
+
+    display: flex;
+    gap: 20px;
+}

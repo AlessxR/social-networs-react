@@ -1,0 +1,13 @@
+
+.sidebar {
+    background: green;
+    width: 120px;
+}
+
+.sidebar__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    list-style-type: none;
+}

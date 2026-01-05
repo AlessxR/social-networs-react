@@ -1,0 +1,13 @@
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: green;
+    height: 75px;
+}
+
+.header__login {
+    padding-right: 20px;
+}

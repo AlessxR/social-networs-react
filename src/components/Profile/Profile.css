@@ -1,0 +1,8 @@
+.profile {
+    width: 100%;
+}
+
+.profile__info__about {
+    display: flex;
+    gap: 20px;
+}
