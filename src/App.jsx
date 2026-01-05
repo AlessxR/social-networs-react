@@ -8,24 +8,31 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage.jsx";
 import Login from "./components/Login/Login.jsx";
 import Dialogs from "./components/Dialogs/Dialogs.jsx";
 
+import {Provider} from "react-redux";
+
+import store from "./store";
+
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <Layout/>,
         children: [
-            {path: "/profile", element: <Profile />},
-            {path: "/login", element: <Login />},
-            {path: "/dialogs", element: <Dialogs />},
-            {path: "*", element: <ErrorMessage />}
+            {path: "/profile", element: <Profile/>},
+            {path: "/login", element: <Login/>},
+            {path: "/dialogs", element: <Dialogs/>},
+            {path: "*", element: <ErrorMessage/>}
         ]
     }
 ]);
 
 const App = () => {
     return (
-        <div className="app">
-            <RouterProvider router={router}></RouterProvider>
-        </div>
+        <Provider store={store}>
+            <div className="app">
+                <RouterProvider router={router}>
+                </RouterProvider>
+            </div>
+        </Provider>
     );
 }
 

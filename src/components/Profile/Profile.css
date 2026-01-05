@@ -11,3 +11,9 @@
     display: flex;
     gap: 10px;
 }
+
+.profile__posts__data {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
