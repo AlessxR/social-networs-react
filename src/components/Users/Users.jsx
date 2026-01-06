@@ -1,13 +1,20 @@
 import './Users.css';
+import {useState} from "react";
 
 const Users = () => {
+    const [follow, setFollow] = useState(false);
+
+    const onFollow = () => {
+        setFollow(!follow);
+    }
+
     return (
         <div className="users">
             <h2>Users</h2>
             <div className="users__container">
                 <div className="users__infomation">
                     <img src="" alt="Image"/>
-                    <button>Follow</button>
+                    <button onClick={onFollow}>{follow ? "Follow" : "Unfollow"}</button>
                 </div>
 
                 <div className="users__infomation__detail">
