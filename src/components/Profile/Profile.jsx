@@ -3,15 +3,22 @@ import './Profile.css';
 import Post from "./Post/Post.jsx";
 
 import {useDispatch, useSelector} from "react-redux";
-import {onAddPost} from "./profileSlice.js";
-import {useState} from "react";
+import {fetchProfile, onAddPost} from "./profileSlice.js";
+import {useEffect, useState} from "react";
 
 const Profile = () => {
 
+    const dispatch = useDispatch();
+
     const posts = useSelector(state => state.profile.posts);
+    const profileStatus = useSelector(state => state.profile.status);
+
+
+    useEffect(() => {
+        dispatch(fetchProfile());
+    }, [dispatch]);
 
     const [text, setText] = useState("");
-    const dispatch = useDispatch();
 
     const handleAdd = () => {
         dispatch(onAddPost(text));
@@ -34,7 +41,9 @@ const Profile = () => {
                              alt=""/>
                     </div>
 
+
                     <div className="porofile__info__about__descr">
+                        <span>Current status: {profileStatus ? "Undefined status" : profileStatus}</span>
                         <p>Name</p>
                         <p>Date of birthday</p>
                         <p>City: </p>
@@ -51,7 +60,7 @@ const Profile = () => {
                         <button onClick={handleAdd}>Add new post</button>
                     </div>
                     <div className="profile__posts__data">
-                        <Post />
+                        <Post/>
                         {
                             posts.map(post => <Post post={post}/>)
                         }

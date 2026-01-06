@@ -1,10 +1,15 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
-const apiLink = `https://social-network.samuraijs.com/api/1.0/profile`;
-
 const initialState = {
     posts: [],
+    status: null,
+    userId: null,
+    loading: false,
+    error: null
 }
+
+const apiLink = `/api/profile/status/10`;
+
 
 export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (_, {rejectWithValue}) => {
     try {
@@ -28,9 +33,24 @@ const profileSlice = createSlice({
             state.posts.push(action.payload)
         },
 
-    },
-    extraReducers: () => {
 
+
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchProfile.pending, state => {
+            state.loading = true;
+            state.error = null;
+        });
+
+        builder.addCase(fetchProfile.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = action.payload;
+        });
+
+        builder.addCase(fetchProfile.rejected, (state, action) => {
+            state.loading = false;
+            state.loading = action.payload;
+        })
     }
 });
 
