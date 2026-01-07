@@ -47,7 +47,7 @@ const Profile = () => {
                         <div className="profile__info__about">
                             <div className="profile__info__about-img">
                                 <img height={150} width={150}
-                                     src={profile.photos.small || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"}
+                                     src={profile.photos.large || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"}
                                      alt=""/>
                             </div>
 

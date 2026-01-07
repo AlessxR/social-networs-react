@@ -18,7 +18,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Layout/>,
         children: [
-            { path: "/profile", element: <Navigate to="/profile/1" replace /> },
+            {path: "/profile", element: <Navigate to="/profile/2" replace/>},
             {path: "/profile/:userId", element: <Profile/>},
             {path: "/login", element: <Login/>},
             {path: "/dialogs", element: <Dialogs/>},

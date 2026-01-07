@@ -1,23 +1,16 @@
 import './Users.css';
 
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
-import {fetchUsers} from "./usersSlice.js";
+import {fetchUsers, toggleFollow} from "./usersSlice.js";
+import {Link, Navigate} from "react-router-dom";
 
 const Users = () => {
     const dispatch = useDispatch();
 
-    const [follow, setFollow] = useState(false);
-
     const users = useSelector((state) => state.users.users);
-
-    const onFollow = () => {
-        setFollow(!follow);
-    }
-
-    console.log(users);
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -31,8 +24,15 @@ const Users = () => {
                 users.map(user => (
                     <div key={user.id} className="users__container">
                         <div className="users__infomation">
-                            <img height={100} src={user.photos.small || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"} alt="Image"/>
-                            <button onClick={onFollow}>{user.followed ? "unfollow" : "follow"}</button>
+                            <Link to={`/profile/${user.id}`}>
+                                <img height={100}
+                                     src={user.photos.small || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"}
+                                     alt="Image"
+                                />
+                            </Link>
+                            <button onClick={() => dispatch(toggleFollow(user.id))}>
+                                {user.followed ? "Unfollow" : "Follow"}
+                            </button>
                         </div>
 
                         <div className="users__infomation__detail">

@@ -9,9 +9,9 @@ const initialState = {
     profile: null,
 }
 
-export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (profileId, {rejectWithValue}) => {
+export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (profileId = 2, {rejectWithValue}) => {
     try {
-        const response = await fetch(`/api/profile/${profileId || 2}`);
+        const response = await fetch(`/api/profile/${profileId}`);
 
         if (!response.ok) {
             return rejectWithValue({error: response.statusText});
