@@ -11,7 +11,16 @@ const initialState = {
 
 export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_, {rejectWithValue}) => {
     try {
-        const response = await fetch("/auth/me");
+        const response = await fetch(
+            "https://social-network.samuraijs.com/api/1.0/auth/me",
+            {
+                mode: "no-cors",
+                headers: {
+                    "Authorization": "Bearer ed2f0847-99c0-40b5-a093-840533226042",
+                    "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
+                },
+            }
+        );
 
         if (!response.ok) {
             return rejectWithValue(response.statusText);
@@ -19,10 +28,8 @@ export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_,
 
         const data = await response.json();
 
-        console.log(data);
-
-        return await data;
-    } catch(error) {
+        return data;
+    } catch (error) {
         return rejectWithValue(error.message);
     }
 });
@@ -30,9 +37,7 @@ export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_,
 const loginSlice = createSlice({
     name: "login",
     initialState,
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchAuthLogin.pending, (state, action) => {
             state.loading = true;
@@ -50,8 +55,8 @@ const loginSlice = createSlice({
         });
 
         builder.addCase(fetchAuthLogin.rejected, (state, action) => {
-           state.loading = false;
-           // state.error = action.payload;
+            state.loading = false;
+            // state.error = action.payload;
         });
     }
 });
