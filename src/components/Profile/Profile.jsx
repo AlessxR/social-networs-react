@@ -6,19 +6,27 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchProfile, onAddPost} from "./profileSlice.js";
 import {useEffect, useState} from "react";
 
+import {useParams} from "react-router-dom";
+
 const Profile = () => {
+
+    const [text, setText] = useState("");
 
     const dispatch = useDispatch();
 
+    const {userId} = useParams();
+
     const posts = useSelector(state => state.profile.posts);
+
+    const profile = useSelector(state => state.profile.profile);
     const profileStatus = useSelector(state => state.profile.status);
 
+    console.log(profile);
 
     useEffect(() => {
-        dispatch(fetchProfile());
-    }, [dispatch]);
-
-    const [text, setText] = useState("");
+        const id = userId || 2;
+        dispatch(fetchProfile(id));
+    }, [dispatch, userId]);
 
     const handleAdd = () => {
         dispatch(onAddPost(text));
@@ -34,23 +42,24 @@ const Profile = () => {
             </div>
 
             <div className="profile__info">
-                <div className="profile__info__about">
-                    <div className="profile__info__about-img">
-                        <img height={150} width={150}
-                             src="https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"
-                             alt=""/>
-                    </div>
+                {
+                    profile && (
+                        <div className="profile__info__about">
+                            <div className="profile__info__about-img">
+                                <img height={150} width={150}
+                                     src={profile.photos.small || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"}
+                                     alt=""/>
+                            </div>
 
 
-                    <div className="porofile__info__about__descr">
-                        <span>Current status: {profileStatus ? "Undefined status" : profileStatus}</span>
-                        <p>Name</p>
-                        <p>Date of birthday</p>
-                        <p>City: </p>
-                        <p>Education</p>
-                        <p>Website</p>
-                    </div>
-                </div>
+                            <div className="porofile__info__about__descr">
+                                <span>Current status: {profileStatus || "Undefined status"}</span>
+                                <p>Name: {profile.fullName}</p>
+                                <p>Websites: {profile.contacts.facebook || "Не указано!"}</p>
+                            </div>
+                        </div>
+                    )
+                }
 
                 <div className="profile__posts">
                     <h3>My posts</h3>

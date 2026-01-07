@@ -1,6 +1,6 @@
 import './App.css';
 
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
 
 import Profile from "./components/Profile/Profile.jsx";
 import Layout from "./components/Layout.jsx";
@@ -18,7 +18,8 @@ const router = createBrowserRouter([
         path: "/",
         element: <Layout/>,
         children: [
-            {path: "/profile", element: <Profile/>},
+            { path: "/profile", element: <Navigate to="/profile/1" replace /> },
+            {path: "/profile/:userId", element: <Profile/>},
             {path: "/login", element: <Login/>},
             {path: "/dialogs", element: <Dialogs/>},
             {path: "/users", element: <Users/>},

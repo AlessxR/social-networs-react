@@ -29,7 +29,7 @@ const Users = () => {
             {/*<button onClick={() => dispatch(fetchUsers())}>Get Data</button>*/}
             {
                 users.map(user => (
-                    <div className="users__container">
+                    <div key={user.id} className="users__container">
                         <div className="users__infomation">
                             <img height={100} src={user.photos.small || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"} alt="Image"/>
                             <button onClick={onFollow}>{user.followed ? "unfollow" : "follow"}</button>

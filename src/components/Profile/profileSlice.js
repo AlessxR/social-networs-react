@@ -3,23 +3,25 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 const initialState = {
     posts: [],
     status: null,
-    userId: null,
+    profileId: 2,
     loading: false,
-    error: null
+    error: null,
+    profile: null,
 }
 
-const apiLink = `/api/profile/status/10`;
-
-
-export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (_, {rejectWithValue}) => {
+export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (profileId, {rejectWithValue}) => {
     try {
-        const response = await fetch(apiLink);
+        const response = await fetch(`/api/profile/${profileId || 2}`);
 
         if (!response.ok) {
             return rejectWithValue({error: response.statusText});
         }
 
-        return await response.json();
+        const data = await response.json();
+
+        console.log(data);
+
+        return await data;
     } catch(e) {
         console.error(e);
     }
@@ -33,8 +35,6 @@ const profileSlice = createSlice({
             state.posts.push(action.payload)
         },
 
-
-
     },
     extraReducers: (builder) => {
         builder.addCase(fetchProfile.pending, state => {
@@ -44,7 +44,8 @@ const profileSlice = createSlice({
 
         builder.addCase(fetchProfile.fulfilled, (state, action) => {
             state.loading = false;
-            state.status = action.payload;
+            state.profile = action.payload;
+            state.status = action.payload?.lookingForAJobDescription || undefined;
         });
 
         builder.addCase(fetchProfile.rejected, (state, action) => {
