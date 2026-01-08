@@ -6,15 +6,19 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {fetchUsers, toggleFollow} from "./usersSlice.js";
 import {Link, Navigate} from "react-router-dom";
+import Preloader from "../Preloader/Preloader.jsx";
 
 const Users = () => {
     const dispatch = useDispatch();
 
     const users = useSelector((state) => state.users.users);
+    const loading = useSelector((state) => state.users.loading);
 
     useEffect(() => {
         dispatch(fetchUsers());
     }, [dispatch]);
+
+    if (loading) return <Preloader />;
 
     return (
         <div className="users">

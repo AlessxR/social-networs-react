@@ -9,7 +9,7 @@ const initialState = {
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async (_, {rejectWithValue}) => {
     // Делаем запрос на API
     try {
-        const response = await fetch('/api/users');
+        const response = await fetch('/api/1.0/users');
 
         // Если не норм - возвращаем ошибку
         if (!response.ok) {

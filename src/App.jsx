@@ -15,7 +15,6 @@ import Users from "./components/Users/Users.jsx";
 
 const AppRoutes = () => {
     const isAuth = useSelector(state => state.auth.isAuth);
-
     const authUserId = useSelector(state => state.auth.id);
 
     const router = createBrowserRouter([

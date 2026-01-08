@@ -1,10 +1,12 @@
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {fetchAuthLogin, fetchLoginWithData} from "./loginSlice.js";
 
 import './Login.css';
 
 import {useState} from "react";
+import Preloader from "../Preloader/Preloader.jsx";
+import {Navigate} from "react-router-dom";
 
 const Login = () => {
 
@@ -13,6 +15,12 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const loading = useSelector(state => state.auth.loading);
+    const isAuth = useSelector(state => state.auth.isAuth);
+
+    if (isAuth) return <Navigate to="/profile" />
+
+    if (loading) return <Preloader />;
 
 
     return (

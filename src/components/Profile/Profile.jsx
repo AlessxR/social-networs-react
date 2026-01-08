@@ -7,6 +7,7 @@ import {fetchProfile, onAddPost} from "./profileSlice.js";
 import {useEffect, useState} from "react";
 
 import {useNavigate, useNavigation, useParams} from "react-router-dom";
+import Preloader from "../Preloader/Preloader.jsx";
 
 const Profile = () => {
 
@@ -26,13 +27,17 @@ const Profile = () => {
     const profile = useSelector(state => state.profile.profile);
     const profileStatus = useSelector(state => state.profile.status);
 
-    console.log(profile);
+    const loading = useSelector(state => state.profile.loading);
+
 
     useEffect(() => {
         if (idToFetch) {
             dispatch(fetchProfile(idToFetch));
         }
     }, [dispatch, idToFetch]);
+
+    if (loading) return <Preloader />
+
 
     const handleAdd = () => {
         dispatch(onAddPost(text));
