@@ -4,9 +4,11 @@ import {useEffect} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
-import {fetchUsers, toggleFollow} from "./usersSlice.js";
+import {changePage, fetchUsers, toggleFollow} from "./usersSlice.js";
+
 import {Link, Navigate} from "react-router-dom";
 import Preloader from "../Preloader/Preloader.jsx";
+import {Pagination} from "@mui/material";
 
 const Users = () => {
     const dispatch = useDispatch();
@@ -14,9 +16,18 @@ const Users = () => {
     const users = useSelector((state) => state.users.users);
     const loading = useSelector((state) => state.users.loading);
 
+    const page = useSelector((state) => state.users.page);
+
+    // const page = 1;
+    const count = 5;
+
     useEffect(() => {
-        dispatch(fetchUsers());
-    }, [dispatch]);
+        dispatch(fetchUsers({page, count}));
+    }, [dispatch, page, count]);
+
+    const handlePageChange = (event, value) => {
+        dispatch(changePage(value));
+    }
 
     if (loading) return <Preloader />;
 
@@ -24,6 +35,8 @@ const Users = () => {
         <div className="users">
             <h2>Users</h2>
             {/*<button onClick={() => dispatch(fetchUsers())}>Get Data</button>*/}
+            <Pagination defaultPage={1} count={count} page={page} onChange={handlePageChange} color={"secondary"} />
+
             {
                 users.map(user => (
                     <div key={user.id} className="users__container">

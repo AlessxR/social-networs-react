@@ -3,13 +3,29 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 const initialState = {
     users: [],
     loading: false,
-    error: null
+    error: null,
+    page: 1,
+    count: 10
 }
 
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async (_, {rejectWithValue}) => {
+export const fetchUsers = createAsyncThunk("users/fetchUsers", async ({page = 1, count = 10}, {rejectWithValue}) => {
     // Делаем запрос на API
     try {
-        const response = await fetch('/api/1.0/users');
+
+        // Тут можно получить данные с помощью query-string
+        // Query Parameters
+        // count: (integer - default: 10 - maximum: 100)
+        // page size (how many items will be returned in response)
+        //
+        // page: (integer - default: 1)
+        // number of portion of items
+        //
+        // term: (string)
+        // user name string for searching
+        // friend: (boolean)
+        // if true, then find only followed users, false - only not followed users, if omit parameter - all users
+
+        const response = await fetch(`/api/1.0/users?page=${page}&count=${count}`);
 
         // Если не норм - возвращаем ошибку
         if (!response.ok) {
@@ -51,7 +67,11 @@ export const toggleFollow = createAsyncThunk(
 export const userSlice = createSlice({
     name: "users",
     initialState,
-    reducers: {},
+    reducers: {
+        changePage: (state, action) => {
+            state.page = action.payload;
+        }
+    },
     extraReducers: (builder) => {
 
         // fetchUsers
@@ -84,5 +104,7 @@ export const userSlice = createSlice({
         })
     }
 });
+
+export const { changePage } = userSlice.actions;
 
 export default userSlice.reducer;

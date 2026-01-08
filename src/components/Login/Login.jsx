@@ -19,9 +19,7 @@ const Login = () => {
     const isAuth = useSelector(state => state.auth.isAuth);
 
     if (isAuth) return <Navigate to="/profile" />
-
     if (loading) return <Preloader />;
-
 
     return (
         <form className="login" onSubmit={(e) => e.preventDefault()}>
