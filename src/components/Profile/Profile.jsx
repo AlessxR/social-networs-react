@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchProfile, onAddPost} from "./profileSlice.js";
 import {useEffect, useState} from "react";
 
-import {useParams} from "react-router-dom";
+import {useNavigate, useNavigation, useParams} from "react-router-dom";
 
 const Profile = () => {
 
@@ -14,7 +14,12 @@ const Profile = () => {
 
     const dispatch = useDispatch();
 
-    const {userId} = useParams();
+    const authUserId = useSelector(state => state.auth.id);
+
+
+    const { userId } = useParams(); // берём id из URL
+    const idToFetch = userId || authUserId; // если нет id в URL, берём свой
+
 
     const posts = useSelector(state => state.profile.posts);
 
@@ -24,9 +29,10 @@ const Profile = () => {
     console.log(profile);
 
     useEffect(() => {
-        const id = userId || 2;
-        dispatch(fetchProfile(id));
-    }, [dispatch, userId]);
+        if (idToFetch) {
+            dispatch(fetchProfile(idToFetch));
+        }
+    }, [dispatch, idToFetch]);
 
     const handleAdd = () => {
         dispatch(onAddPost(text));

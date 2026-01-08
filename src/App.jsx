@@ -8,32 +8,39 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage.jsx";
 import Login from "./components/Login/Login.jsx";
 import Dialogs from "./components/Dialogs/Dialogs.jsx";
 
-import {Provider} from "react-redux";
+import {Provider, useSelector} from "react-redux";
 
 import store from "./store";
 import Users from "./components/Users/Users.jsx";
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout/>,
-        children: [
-            {path: "/profile", element: <Navigate to="/profile/2" replace/>},
-            {path: "/profile/:userId", element: <Profile/>},
-            {path: "/login", element: <Login/>},
-            {path: "/dialogs", element: <Dialogs/>},
-            {path: "/users", element: <Users/>},
-            {path: "*", element: <ErrorMessage/>}
-        ]
-    }
-]);
+const AppRoutes = () => {
+    const isAuth = useSelector(state => state.auth.isAuth);
+
+    const authUserId = useSelector(state => state.auth.id);
+
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <Layout/>,
+            children: [
+                { path: "/profile", element: isAuth ? <Navigate to={`/profile/${authUserId}`} /> : <Navigate to="/login" /> },
+                { path: "/profile/:userId", element: <Profile/> },
+                { path: "/login", element: <Login/> },
+                { path: "/dialogs", element: <Dialogs/> },
+                { path: "/users", element: <Users/> },
+                { path: "*", element: <ErrorMessage/> }
+            ]
+        }
+    ]);
+
+    return <RouterProvider router={router} />;
+};
 
 const App = () => {
     return (
         <Provider store={store}>
             <div className="app">
-                <RouterProvider router={router}>
-                </RouterProvider>
+                <AppRoutes />
             </div>
         </Provider>
     );

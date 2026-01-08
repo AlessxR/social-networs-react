@@ -6,10 +6,10 @@ export default defineConfig({
     plugins: [react()],
     server: {
         proxy: {
-            '/api': {
-                target: 'https://social-network.samuraijs.com/api/1.0',
+            "/api": {
+                target: "https://social-network.samuraijs.com",
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ''),
+                secure: false,
             },
         },
     },

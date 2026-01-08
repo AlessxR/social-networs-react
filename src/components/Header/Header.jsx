@@ -1,6 +1,14 @@
 import './Header.css';
+import {useSelector} from "react-redux";
 
 const Header = () => {
+
+    const login = useSelector(state => state.auth.login);
+
+    const isAuth = useSelector(state => state.auth.isAuth);
+
+    console.log(login);
+
     return (
         <header className="header">
             <div className="header__logo">
@@ -10,7 +18,7 @@ const Header = () => {
             </div>
 
             <div className="header__login">
-                <a href={"/login"} className="header__login-btn">Login</a>
+                <a href={"/login"} className="header__login-btn">{isAuth ? login : "Log in"}</a>
             </div>
         </header>
     );

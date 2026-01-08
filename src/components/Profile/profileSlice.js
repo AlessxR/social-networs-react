@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {useSelector} from "react-redux";
 
 const initialState = {
     posts: [],
@@ -9,9 +10,12 @@ const initialState = {
     profile: null,
 }
 
-export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (profileId = 2, {rejectWithValue}) => {
+
+export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (userId, {rejectWithValue}) => {
+
     try {
-        const response = await fetch(`/api/profile/${profileId}`);
+
+        const response = await fetch(`/api/1.0/profile/${userId}`);
 
         if (!response.ok) {
             return rejectWithValue({error: response.statusText});

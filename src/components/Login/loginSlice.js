@@ -8,16 +8,16 @@ const initialState = {
     login: null,
     loading: false,
     error: null,
-
+    isAuth: false,
 }
 
 export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_, {rejectWithValue}) => {
     try {
         const response = await fetch(
-            "https://social-network.samuraijs.com/api/1.0/auth/me",
+            "/api/1.0/auth/me",
             {
+                credentials: "include",
                 method: "GET",
-                mode: "no-cors",
                 headers: {
                     "Authorization": "Bearer ed2f0847-99c0-40b5-a093-840533226042",
                     "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
@@ -29,26 +29,27 @@ export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_,
             return rejectWithValue(response.statusText);
         }
 
-        const data = await response.json();
-
-        return data;
+        return await response.json();
     } catch (error) {
         return rejectWithValue(error.message);
     }
 });
 
-export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", async (_, {rejectWithValue}) => {
+export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", async ({email, password}, {rejectWithValue}) => {
     try {
-        const response = await fetch("https://social-network.samuraijs.com/api/1.0/auth/login", {
-            method: "POST",
 
+        const response = await fetch("/api/1.0/auth/login", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email, password})
         });
 
         if (!response.ok) {
             return rejectWithValue(response.statusText);
         }
-
-        console.log(response.json());
 
         return response.json();
     } catch (error) {
@@ -75,6 +76,8 @@ const loginSlice = createSlice({
             state.email = action.payload.data.email;
             state.login = action.payload.data.login;
 
+            state.isAuth = true;
+
             state.error = null;
         });
 
@@ -94,6 +97,7 @@ const loginSlice = createSlice({
 
             state.email = action.payload;
             state.password = action.payload;
+            state.isAuth = true;
 
             state.error = null;
         });
