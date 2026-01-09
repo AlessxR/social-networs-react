@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchProfile, onAddPost} from "./profileSlice.js";
 import {useEffect, useState} from "react";
 
-import {useNavigate, useNavigation, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import Preloader from "../Preloader/Preloader.jsx";
 
 const Profile = () => {
@@ -16,7 +16,6 @@ const Profile = () => {
     const dispatch = useDispatch();
 
     const authUserId = useSelector(state => state.auth.id);
-
 
     const { userId } = useParams(); // берём id из URL
     const idToFetch = userId || authUserId; // если нет id в URL, берём свой

@@ -19,7 +19,6 @@ export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_,
                 credentials: "include",
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer ed2f0847-99c0-40b5-a093-840533226042",
                     "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
                 },
             }
@@ -68,7 +67,6 @@ const loginSlice = createSlice({
             state.loading = true;
             state.error = null;
         });
-
         builder.addCase(fetchAuthLogin.fulfilled, (state, action) => {
             state.loading = false;
 
@@ -80,7 +78,6 @@ const loginSlice = createSlice({
 
             state.error = null;
         });
-
         builder.addCase(fetchAuthLogin.rejected, (state, action) => {
             state.loading = false;
             // state.error = action.payload;
@@ -95,8 +92,10 @@ const loginSlice = createSlice({
         builder.addCase(fetchLoginWithData.fulfilled, (state, action) => {
             state.loading = false;
 
+            state.id = action.payload.data.userId;
             state.email = action.payload;
             state.password = action.payload;
+
             state.isAuth = true;
 
             state.error = null;
