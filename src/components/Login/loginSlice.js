@@ -42,6 +42,7 @@ export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", a
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
+                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
             },
             body: JSON.stringify({email, password})
         });
@@ -55,6 +56,26 @@ export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", a
         return rejectWithValue(error.message);
     }
 });
+
+export const fetchLogout = createAsyncThunk("users/logout", async (_, {rejectWithValue}) => {
+    try {
+        const response = await fetch("/api/1.0/auth/logout", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
+            },
+        });
+
+        if (!response.ok) {
+            return rejectWithValue(response.statusText);
+        }
+
+        return true;
+    } catch(e) {
+        return rejectWithValue({error: e});
+    }
+})
 
 const loginSlice = createSlice({
     name: "login",
@@ -88,7 +109,6 @@ const loginSlice = createSlice({
             state.loading = true;
             state.error = null;
         });
-
         builder.addCase(fetchLoginWithData.fulfilled, (state, action) => {
             state.loading = false;
 
@@ -101,10 +121,29 @@ const loginSlice = createSlice({
 
             state.error = null;
         });
-
         builder.addCase(fetchLoginWithData.rejected, (state, action) => {
             state.loading = false;
             // state.error = action.payload;
+        });
+
+        // auth/logout
+        builder.addCase(fetchLogout.pending, (state, action) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(fetchLogout.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+
+            state.id = null;
+            state.login = null;
+            state.email = null;
+            state.password = null;
+
+            state.isAuth = false;
+        });
+        builder.addCase(fetchLogout.rejected, (state, action) => {
+            state.error = action.payload;
         });
     }
 });

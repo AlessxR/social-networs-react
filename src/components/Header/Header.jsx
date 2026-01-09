@@ -1,9 +1,12 @@
 import './Header.css';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {Link} from "react-router-dom";
+import {fetchLogout} from "../Login/loginSlice.js";
 
 const Header = () => {
+
+    const dispatch = useDispatch();
 
     const isAuth = useSelector(state => state.auth.isAuth);
 
@@ -18,7 +21,10 @@ const Header = () => {
             </div>
 
             <div className="header__login">
-                <Link to={"/login"} className="header__login-btn">{isAuth ? "Log out" : "Log in"}</Link>
+                {
+                    isAuth ?
+                        <button onClick={() => dispatch(fetchLogout())}>Log out</button> : <Link to="/login">Log in</Link>
+                }
             </div>
         </header>
     );
