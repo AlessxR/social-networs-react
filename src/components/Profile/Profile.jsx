@@ -17,7 +17,7 @@ const Profile = () => {
 
     const authUserId = useSelector(state => state.auth.id);
 
-    const { userId } = useParams(); // берём id из URL
+    const {userId} = useParams(); // берём id из URL
     const idToFetch = userId || authUserId; // если нет id в URL, берём свой
 
 
@@ -35,7 +35,7 @@ const Profile = () => {
         }
     }, [dispatch, idToFetch]);
 
-    if (loading) return <Preloader />
+    if (loading) return <Preloader/>
 
 
     const handleAdd = () => {
@@ -48,7 +48,8 @@ const Profile = () => {
             <div className="profile__logo">
                 <img width={"100%"} height={100}
                      src="https://png.pngtree.com/thumb_back/fh260/background/20250205/pngtree-soft-pastel-floral-design-light-blue-background-image_16896113.jpg"
-                     alt="Profile logo" className="profile__logo-img"/>
+                     alt="Profile logo" className="profile__logo-img"
+                />
             </div>
 
             <div className="profile__info">
@@ -58,7 +59,8 @@ const Profile = () => {
                             <div className="profile__info__about-img">
                                 <img height={150} width={150}
                                      src={profile.photos.large || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"}
-                                     alt=""/>
+                                     alt=""
+                                />
                             </div>
 
 

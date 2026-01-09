@@ -93,6 +93,7 @@ const loginSlice = createSlice({
             state.loading = false;
 
             state.id = action.payload.data.userId;
+            state.login = action.payload.data.fullName;
             state.email = action.payload;
             state.password = action.payload;
 

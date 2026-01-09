@@ -1,10 +1,8 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {useSelector} from "react-redux";
 
 const initialState = {
     posts: [],
     status: null,
-    profileId: 2,
     loading: false,
     error: null,
     profile: null,
