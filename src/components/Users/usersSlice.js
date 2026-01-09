@@ -5,9 +5,11 @@ const initialState = {
     loading: false,
     error: null,
     page: 1,
-    count: 10
+    count: 10,
+    totalCount: null,
 }
 
+// get users
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async ({page = 1, count = 10}, {rejectWithValue}) => {
     // Делаем запрос на API
     try {
@@ -39,31 +41,79 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async ({page = 1,
     }
 });
 
-export const toggleFollow = createAsyncThunk(
-    "users/toggleFollow", async (userId = 2, {rejectWithValue}) => {
-        try {
-            const response = await fetch(`/api/follow/${userId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                withCredentials: true,
-            });
+// get follows
+export const getUserFollowed = createAsyncThunk("users/getUserFollowed", async (userId, {rejectWithValue}) => {
+    try {
+        const response = await fetch(`/api/1.0/follow/${userId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+        });
 
-            if (!response.ok) {
-                return rejectWithValue({error: response.statusText});
-            }
-
-            const data = await response.json();
-
-            console.log(data);
-
-            return await data;
-        } catch (e) {
-            console.error(e);
+        if (!response.ok) {
+            return rejectWithValue({error: response.statusText});
         }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        return data;
+    } catch (e) {
+        return rejectWithValue({error: e});
     }
-);
+});
+
+export const followRequest = createAsyncThunk("users/followRequest", async (userId, {rejectWithValue}) => {
+
+    try {
+        const response = await fetch(`/api/1.0/follow/${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
+                },
+                credentials: "include"
+            }
+        );
+
+        if (!response.ok) {
+            return rejectWithValue({error: response.statusText});
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        return userId;
+    } catch (e) {
+        return rejectWithValue({error: e});
+    }
+});
+
+export const followRemove = createAsyncThunk("users/followRemove", async (userId, {rejectWithValue}) => {
+    try {
+        const response = await fetch(`/api/1.0/follow/${userId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
+            },
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        return userId;
+    } catch (e) {
+        return rejectWithValue({error: e});
+    }
+});
+
 export const userSlice = createSlice({
     name: "users",
     initialState,
@@ -81,6 +131,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
             state.loading = false;
+            state.totalCount = action.payload.totalCount;
             state.users = action.payload.items;
         });
         builder.addCase(fetchUsers.rejected, (state, action) => {
@@ -89,22 +140,46 @@ export const userSlice = createSlice({
         });
 
         // toggleFollow
-        builder.addCase(toggleFollow.pending, (state, action) => {
+        builder.addCase(followRequest.pending, (state, action) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(toggleFollow.fulfilled, (state, action) => {
+        builder.addCase(followRequest.fulfilled, (state, action) => {
             state.loading = false;
-            const updateUser = action.payload;
-            state.users = state.users.map(user => user.id === updateUser.id ? updateUser : user);
+            // Получаем userId с API
+            const userId = action.payload;
+
+            // Далее перебираем users, и если userId, который пришёл с API такой же как и мы нажали по кнопке
+            // То выводим определенного юзера в котором и меняет followed свойство.
+            state.users = state.users.map(user =>
+                user.id === userId
+                    ? {...user, followed: true}
+                    : user
+            );
         });
-        builder.addCase(toggleFollow.rejected, (state, action) => {
+        builder.addCase(followRequest.rejected, (state, action) => {
             state.loading = false;
+            state.error = action.payload;
+        })
+
+        // removeFollow
+        builder.addCase(followRemove.pending, (state, action) => {
+             state.loading = true;
+             state.error = null;
+        });
+        builder.addCase(followRemove.fulfilled, (state, action) => {
+            state.loading = false;
+            const userId = action.payload;
+            state.users = state.users.map(user => {
+                return user.id === userId ? {...user, followed: false} : user
+            });
+        });
+        builder.addCase(followRemove.rejected, (state, action) => {
             state.error = action.payload;
         })
     }
 });
 
-export const { changePage } = userSlice.actions;
+export const {changePage} = userSlice.actions;
 
 export default userSlice.reducer;

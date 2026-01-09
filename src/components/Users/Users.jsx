@@ -4,9 +4,9 @@ import {useEffect} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
-import {changePage, fetchUsers, toggleFollow} from "./usersSlice.js";
+import {changePage, fetchUsers, followRemove, followRequest, getUserFollowed} from "./usersSlice.js";
 
-import {Link, Navigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Preloader from "../Preloader/Preloader.jsx";
 import {Pagination} from "@mui/material";
 
@@ -18,24 +18,28 @@ const Users = () => {
 
     const page = useSelector((state) => state.users.page);
 
-    // const page = 1;
-    const count = 5;
+    const totalCount = useSelector((state) => state.users.totalCount);
+
+    const count = 5; // Общее кол-во пользователей на 1 странице
+    const totalPages = Math.ceil(totalCount / count); // Сколько в общем страниц с пользователями
 
     useEffect(() => {
         dispatch(fetchUsers({page, count}));
     }, [dispatch, page, count]);
 
+
     const handlePageChange = (event, value) => {
         dispatch(changePage(value));
     }
 
-    if (loading) return <Preloader />;
+    if (loading) return <Preloader/>;
+
 
     return (
         <div className="users">
             <h2>Users</h2>
             {/*<button onClick={() => dispatch(fetchUsers())}>Get Data</button>*/}
-            <Pagination defaultPage={1} count={count} page={page} onChange={handlePageChange} color={"secondary"} />
+            <Pagination defaultPage={1} count={totalPages} page={page} onChange={handlePageChange} color={"secondary"}/>
 
             {
                 users.map(user => (
@@ -47,7 +51,13 @@ const Users = () => {
                                      alt="Image"
                                 />
                             </Link>
-                            <button onClick={() => dispatch(toggleFollow(user.id))}>
+                            <button onClick={() => {
+                                if (user.followed) {
+                                    dispatch(followRemove(user.id));
+                                } else {
+                                    dispatch(followRequest(user.id));
+                                }
+                            }}>
                                 {user.followed ? "Unfollow" : "Follow"}
                             </button>
                         </div>
