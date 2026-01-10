@@ -91,7 +91,7 @@ const loginSlice = createSlice({
         builder.addCase(fetchAuthLogin.fulfilled, (state, action) => {
             state.loading = false;
 
-            state.id = action.payload.data.id;
+            state.id = action.payload.data.userId;
             state.email = action.payload.data.email;
             state.login = action.payload.data.login;
 

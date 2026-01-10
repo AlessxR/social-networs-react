@@ -7,11 +7,12 @@ import Layout from "./components/Layout.jsx";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage.jsx";
 import Login from "./components/Login/Login.jsx";
 import Dialogs from "./components/Dialogs/Dialogs.jsx";
+import Users from "./components/Users/Users.jsx";
+import NotLogged from "./components/NotLogged.jsx";
 
 import {Provider, useSelector} from "react-redux";
 
 import store from "./store";
-import Users from "./components/Users/Users.jsx";
 
 const AppRoutes = () => {
     const isAuth = useSelector(state => state.auth.isAuth);
@@ -22,11 +23,12 @@ const AppRoutes = () => {
             path: "/",
             element: <Layout/>,
             children: [
-                { path: "/profile", element: isAuth ? <Navigate to={`/profile/${authUserId}`} /> : <Navigate to="/login" /> },
-                { path: "/profile/:userId", element: <Profile/> },
-                { path: "/login", element: <Login/> },
-                { path: "/dialogs", element: <Dialogs/> },
-                { path: "/users", element: <Users/> },
+                {index: true, element: <NotLogged />},
+                { path: "profile", element: isAuth ? <Navigate to={`/profile/${authUserId}`} /> : <Navigate to="/login" /> },
+                { path: "profile/:userId", element: <Profile/> },
+                { path: "login", element: <Login/> },
+                { path: "dialogs", element: <Dialogs/> },
+                { path: "users", element: <Users/> },
                 { path: "*", element: <ErrorMessage/> }
             ]
         }

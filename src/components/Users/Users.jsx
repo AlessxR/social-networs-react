@@ -6,19 +6,19 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {changePage, fetchUsers, followRemove, followRequest, getUserFollowed} from "./usersSlice.js";
 
-import {Link} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import Preloader from "../Preloader/Preloader.jsx";
 import {Pagination} from "@mui/material";
+import Login from "../Login/Login.jsx";
 
 const Users = () => {
     const dispatch = useDispatch();
 
     const users = useSelector((state) => state.users.users);
     const loading = useSelector((state) => state.users.loading);
-
     const page = useSelector((state) => state.users.page);
-
     const totalCount = useSelector((state) => state.users.totalCount);
+    const isAuth = useSelector((state) => state.auth.isAuth);
 
     const count = 5; // Общее кол-во пользователей на 1 странице
     const totalPages = Math.ceil(totalCount / count); // Сколько в общем страниц с пользователями
@@ -33,6 +33,10 @@ const Users = () => {
     }
 
     if (loading) return <Preloader/>;
+
+    // if (!isAuth)  {
+    //     return <Navigate to="/login" />
+    // }
 
 
     return (
