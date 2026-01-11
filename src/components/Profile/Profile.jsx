@@ -13,6 +13,7 @@ import Preloader from "../Preloader/Preloader.jsx";
 const Profile = () => {
 
     const [text, setText] = useState("");
+    const [edit, setEdit] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -21,12 +22,17 @@ const Profile = () => {
     const {userId} = useParams(); // берём id из URL
     const idToFetch = userId || authUserId; // если нет id в URL, берём свой
 
-
     const posts = useSelector(state => state.profile.posts);
     const profile = useSelector(state => state.profile.profile);
-    const profileStatus = useSelector(state => state.profile.status);
-    const loading = useSelector(state => state.profile.loading);
 
+    // Получаем статус пользователя
+    const profileStatus = useSelector(state => state.profile.status);
+
+    // Храним локальный статус, чтобы не делать миллиард запросов
+    const [localStatus, setLocalStatus] = useState(profileStatus);
+
+
+    const loading = useSelector(state => state.profile.loading);
 
     useEffect(() => {
         if (idToFetch) {
@@ -35,12 +41,31 @@ const Profile = () => {
         dispatch(fetchProfileStatus(idToFetch));
     }, [dispatch, idToFetch]);
 
+    useEffect(() => {
+       setLocalStatus(profileStatus);
+    }, [profileStatus]);
+
     if (loading) return <Preloader/>;
 
     const handleAdd = () => {
         dispatch(onAddPost(text));
         setText("");
     }
+
+    // Включаем режим редактирования
+    const handleStatusEdit = () => setEdit(true);
+
+    // Убираем режим редактирования
+    const handleBlur = () => {
+        setEdit(false);
+
+        // Если локальный статус не такой как profileStatus, то хуярим его на API
+        if (localStatus !== profileStatus) {
+            dispatch(fetchStatusChange(localStatus));
+        }
+    };
+
+    console.log(edit);
 
     return (
         <div className="profile">
@@ -64,7 +89,15 @@ const Profile = () => {
 
                             <div className="porofile__info__about__descr">
                                 <p style={{fontWeight: "bold"}}>{profile.fullName}</p>
-                                <span>{profileStatus ? profileStatus : "-----"}</span>
+                                {!edit && <span onDoubleClick={handleStatusEdit}>{profileStatus || "-----"}</span>}
+                                {edit && <input
+                                    type="text"
+                                    value={localStatus}
+                                    /* Добавляем новый статус в локальный */
+                                    onChange={e => setLocalStatus(e.target.value)}
+                                    onBlur={handleBlur}
+                                    defaultValue={profileStatus}
+                                />}
                             </div>
                         </div>
                     )

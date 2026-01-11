@@ -6,7 +6,6 @@ const initialState = {
     loading: false,
     error: null,
     profile: null,
-    changeStatus: false,
 }
 
 // get profile
@@ -51,18 +50,25 @@ export const fetchProfileStatus = createAsyncThunk("profile/fetchProfileStatus",
 });
 
 // change status
-export const fetchStatusChange = createAsyncThunk("profile/fetchStatusChange", async (_, {rejectWithValue}) => {
+export const fetchStatusChange = createAsyncThunk("profile/fetchStatusChange", async (status, {rejectWithValue}) => {
     try {
-        const response = fetch("/api/1.0/profile/status", {
-            method: "POST",
+        const response = await fetch("/api/1.0/profile/status", {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
             },
             credentials: "include",
+            body: JSON.stringify({status})
         });
 
-        return await response.json();
+        const data = await response.json();
+
+        if (data.resultCode !== 0) {
+            return rejectWithValue(data.messages[0] || "Ошибка обновления статуса");
+        }
+
+        return status;
 
     } catch (e) {
         console.error(e);
@@ -114,15 +120,15 @@ const profileSlice = createSlice({
 
         // profile/fetchStatusChange
         builder.addCase(fetchStatusChange.pending, (state, action) => {
-            state.loading = true;
+            // state.loading = true;
             state.error = null;
         });
         builder.addCase(fetchStatusChange.fulfilled, (state, action) => {
-            state.loading = false;
-            state.status = action.payload.data.status;
+            // state.loading = false;
+            state.status = action.payload;
         });
         builder.addCase(fetchStatusChange.rejected, (state, action) => {
-            state.loading = false;
+            // state.loading = false;
             state.error = action.payload;
         });
     }
