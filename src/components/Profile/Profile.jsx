@@ -3,7 +3,8 @@ import './Profile.css';
 import Post from "./Post/Post.jsx";
 
 import {useDispatch, useSelector} from "react-redux";
-import {fetchProfile, onAddPost} from "./profileSlice.js";
+import {fetchProfile, fetchProfileStatus, fetchStatusChange, onAddPost, onChangeStatus} from "./profileSlice.js";
+
 import {useEffect, useState} from "react";
 
 import {useParams} from "react-router-dom";
@@ -22,10 +23,8 @@ const Profile = () => {
 
 
     const posts = useSelector(state => state.profile.posts);
-
     const profile = useSelector(state => state.profile.profile);
     const profileStatus = useSelector(state => state.profile.status);
-
     const loading = useSelector(state => state.profile.loading);
 
 
@@ -33,10 +32,10 @@ const Profile = () => {
         if (idToFetch) {
             dispatch(fetchProfile(idToFetch));
         }
+        dispatch(fetchProfileStatus(idToFetch));
     }, [dispatch, idToFetch]);
 
-    if (loading) return <Preloader/>
-
+    if (loading) return <Preloader/>;
 
     const handleAdd = () => {
         dispatch(onAddPost(text));
@@ -63,11 +62,9 @@ const Profile = () => {
                                 />
                             </div>
 
-
                             <div className="porofile__info__about__descr">
-                                <span>Current status: {profileStatus || "Undefined status"}</span>
-                                <p>Name: {profile.fullName}</p>
-                                <p>Websites: {profile.contacts.facebook || "Не указано!"}</p>
+                                <p style={{fontWeight: "bold"}}>{profile.fullName}</p>
+                                <span>{profileStatus ? profileStatus : "-----"}</span>
                             </div>
                         </div>
                     )
