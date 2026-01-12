@@ -166,6 +166,9 @@ const profileSlice = createSlice({
             state.profile.profile.lookingForAJobDescription = action.payload;
 
         });
+        builder.addCase(fetchChangeProfileInformation.rejected, (state, action) => {
+            state.error = action.payload;
+        });
     }
 });
 
