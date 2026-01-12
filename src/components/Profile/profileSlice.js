@@ -3,7 +3,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 const initialState = {
     posts: [],
     status: "",
-    loading: false,
+    isLoading: false,
     error: null,
     profile: null,
 }
@@ -90,30 +90,30 @@ const profileSlice = createSlice({
 
         // profile/fetchProfile
         builder.addCase(fetchProfile.pending, state => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(fetchProfile.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.profile = action.payload;
             // state.status = action.payload?.lookingForAJobDescription || undefined;
         });
         builder.addCase(fetchProfile.rejected, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.loading = action.payload;
         });
 
         // profile/fetchProfileStatus
         builder.addCase(fetchProfileStatus.pending,  (state, action) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(fetchProfileStatus.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.status = action.payload;
         });
         builder.addCase(fetchProfileStatus.rejected, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.error = action.payload;
         });
 

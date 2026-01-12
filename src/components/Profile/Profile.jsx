@@ -17,7 +17,7 @@ const Profile = () => {
 
     const dispatch = useDispatch();
 
-    const authUserId = useSelector(state => state.auth.id);
+    const authUserId = useSelector(state => state.auth.userId);
 
     const {userId} = useParams(); // берём id из URL
     const idToFetch = userId || authUserId; // если нет id в URL, берём свой
@@ -32,7 +32,7 @@ const Profile = () => {
     const [localStatus, setLocalStatus] = useState(profileStatus);
 
 
-    const loading = useSelector(state => state.profile.loading);
+    const loading = useSelector(state => state.profile.isLoading);
 
     useEffect(() => {
         if (idToFetch) {

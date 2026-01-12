@@ -2,11 +2,11 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     users: [],
-    loading: false,
     error: null,
     page: 1,
     count: 10,
     totalCount: null,
+    isLoading: false,
 }
 
 // get users
@@ -126,26 +126,26 @@ export const userSlice = createSlice({
 
         // fetchUsers
         builder.addCase(fetchUsers.pending, (state) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.totalCount = action.payload.totalCount;
             state.users = action.payload.items;
         });
         builder.addCase(fetchUsers.rejected, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.error = action.payload;
         });
 
         // toggleFollow
         builder.addCase(followRequest.pending, (state, action) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(followRequest.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             // Получаем userId с API
             const userId = action.payload;
 
@@ -158,17 +158,17 @@ export const userSlice = createSlice({
             );
         });
         builder.addCase(followRequest.rejected, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.error = action.payload;
         })
 
         // removeFollow
         builder.addCase(followRemove.pending, (state, action) => {
-             state.loading = true;
+             state.isLoading = true;
              state.error = null;
         });
         builder.addCase(followRemove.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             const userId = action.payload;
             state.users = state.users.map(user => {
                 return user.id === userId ? {...user, followed: false} : user

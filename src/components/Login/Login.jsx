@@ -22,8 +22,9 @@ const Login = () => {
     if (loading) return <Preloader />;
 
     return (
-        <form className="login" onSubmit={(e) => e.preventDefault()}>
-            <button onClick={() => dispatch(fetchAuthLogin())}>AUTH ME</button>
+        <form className={"login"} onSubmit={(e) => e.preventDefault()}>
+            {/* It doesnt work */}
+            {/*<button onClick={() => dispatch(fetchAuthLogin())}>AUTH ME</button>*/}
 
             <div className="login__email">
                 <label>Email</label>

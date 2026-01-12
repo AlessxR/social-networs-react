@@ -16,7 +16,7 @@ import store from "./store";
 
 const AppRoutes = () => {
     const isAuth = useSelector(state => state.auth.isAuth);
-    const authUserId = useSelector(state => state.auth.id);
+    const authUserId = useSelector(state => state.auth.userId);
 
     const router = createBrowserRouter([
         {

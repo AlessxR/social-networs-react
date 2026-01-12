@@ -1,17 +1,17 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
-    id: null,
+    userId: null,
     email: null,
-    password: null,
+    // password: null,
     rememberMe: false,
     login: null,
-    loading: false,
     error: null,
+    isLoading: false,
     isAuth: false,
 }
 
-export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_, {rejectWithValue}) => {
+export const fetchAuthLogin = createAsyncThunk("auth/fetchAuthLogin", async (_, {rejectWithValue}) => {
     try {
         const response = await fetch(
             "/api/1.0/auth/me",
@@ -30,11 +30,11 @@ export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_,
 
         return await response.json();
     } catch (error) {
-        return rejectWithValue({status: 500, message: e.message});
+        return rejectWithValue({status: 500, message: error.message});
     }
 });
 
-export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", async ({email, password}, {rejectWithValue}) => {
+export const fetchLoginWithData = createAsyncThunk("auth/fetchLoginWithData", async ({email, password}, {rejectWithValue}) => {
     try {
 
         const response = await fetch("/api/1.0/auth/login", {
@@ -53,11 +53,11 @@ export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", a
 
         return response.json();
     } catch (error) {
-        return rejectWithValue({status: 500, message: e.message});
+        return rejectWithValue({status: 500, message: error.message});
     }
 });
 
-export const fetchLogout = createAsyncThunk("users/logout", async (_, {rejectWithValue}) => {
+export const fetchLogout = createAsyncThunk("auth/logout", async (_, {rejectWithValue}) => {
     try {
         const response = await fetch("/api/1.0/auth/logout", {
             method: "POST",
@@ -85,13 +85,13 @@ const loginSlice = createSlice({
 
         // auth/me
         builder.addCase(fetchAuthLogin.pending, (state, action) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(fetchAuthLogin.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
 
-            state.id = action.payload.data.userId;
+            state.userId = action.payload.data.userId;
             state.email = action.payload.data.email;
             state.login = action.payload.data.login;
 
@@ -100,42 +100,40 @@ const loginSlice = createSlice({
             state.error = null;
         });
         builder.addCase(fetchAuthLogin.rejected, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             // state.error = action.payload;
         });
 
         // auth/login
         builder.addCase(fetchLoginWithData.pending, (state, action) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(fetchLoginWithData.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
 
-            state.id = action.payload.data.userId;
+            state.userId = action.payload.data.userId;
             state.login = action.payload.data.fullName;
             state.email = action.payload;
-            state.password = action.payload;
 
             state.isAuth = true;
-
             state.error = null;
         });
         builder.addCase(fetchLoginWithData.rejected, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             // state.error = action.payload;
         });
 
         // auth/logout
         builder.addCase(fetchLogout.pending, (state, action) => {
-            state.loading = true;
+            state.isLoading = true;
             state.error = null;
         });
         builder.addCase(fetchLogout.fulfilled, (state, action) => {
-            state.loading = false;
+            state.isLoading = false;
             state.error = null;
 
-            state.id = null;
+            state.userId = null;
             state.login = null;
             state.email = null;
             state.password = null;

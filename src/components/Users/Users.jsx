@@ -14,7 +14,7 @@ const Users = () => {
     const dispatch = useDispatch();
 
     const users = useSelector((state) => state.users.users);
-    const loading = useSelector((state) => state.users.loading);
+    const loading = useSelector((state) => state.users.isLoading);
     const page = useSelector((state) => state.users.page);
     const totalCount = useSelector((state) => state.users.totalCount);
 
