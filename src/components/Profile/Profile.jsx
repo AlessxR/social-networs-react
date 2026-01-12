@@ -9,11 +9,16 @@ import {useEffect, useState} from "react";
 
 import {useParams} from "react-router-dom";
 import Preloader from "../Preloader/Preloader.jsx";
+import {Button} from "@mui/material";
+import ProfileModal from "../Modal/Modal.jsx";
 
 const Profile = () => {
 
     const [text, setText] = useState("");
     const [edit, setEdit] = useState(false);
+
+    const [open, setOpen] = useState(false);
+    const toggleModal = () => setOpen(prev => !prev);
 
     const dispatch = useDispatch();
 
@@ -88,6 +93,20 @@ const Profile = () => {
                             </div>
 
                             <div className="porofile__info__about__descr">
+                                <Button
+                                    onClick={toggleModal}
+                                    size="small"
+                                    variant="outlined"
+                                    color="success"
+                                >
+                                    Больше информации о профиле
+                                </Button>
+
+                                <ProfileModal
+                                    open={open}
+                                    onClose={toggleModal}
+                                />
+
                                 <p style={{fontWeight: "bold"}}>{profile.fullName}</p>
                                 {!edit && <span onDoubleClick={handleStatusEdit}>{profileStatus || "-----"}</span>}
                                 {edit && <input

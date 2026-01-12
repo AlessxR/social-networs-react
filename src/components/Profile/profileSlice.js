@@ -74,6 +74,29 @@ export const fetchStatusChange = createAsyncThunk("profile/fetchStatusChange", a
     }
 });
 
+// change profile
+export const fetchChangeProfileInformation = createAsyncThunk("profile/fetchChangeProfileInformation", async ({fullName, aboutMe, lookingForAJob, lookingForAJobDescription}, {rejectWithValue}) => {
+    try {
+        const response = await fetch(`/api/1.0/profile`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
+            },
+            credentials: "include",
+            body: JSON.stringify({fullName, aboutMe, lookingForAJob, lookingForAJobDescription})
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        return data;
+    } catch(e) {
+        return rejectWithValue({status: 500, message: e.message});
+    }
+});
+
 // reducer
 const profileSlice = createSlice({
     name: "profile",
