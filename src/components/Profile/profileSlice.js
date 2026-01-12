@@ -10,12 +10,11 @@ const initialState = {
 
 // get profile
 export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (userId, {rejectWithValue}) => {
-
     try {
         const response = await fetch(`/api/1.0/profile/${userId}`);
 
         if (!response.ok) {
-            return rejectWithValue({error: response.statusText});
+            return rejectWithValue({status: response.status, message: response.statusText});
         }
 
         const data = await response.json();
@@ -24,7 +23,7 @@ export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (user
 
         return await data;
     } catch (e) {
-        console.error(e);
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
@@ -40,12 +39,12 @@ export const fetchProfileStatus = createAsyncThunk("profile/fetchProfileStatus",
         });
 
         if (!response.ok) {
-            return rejectWithValue({error: response.statusText});
+            return rejectWithValue({status: response.status});
         }
 
         return await response.json();
     } catch (e) {
-        console.error(e);
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
@@ -71,7 +70,7 @@ export const fetchStatusChange = createAsyncThunk("profile/fetchStatusChange", a
         return status;
 
     } catch (e) {
-        console.error(e);
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 

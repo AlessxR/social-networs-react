@@ -3,7 +3,7 @@ import './Profile.css';
 import Post from "./Post/Post.jsx";
 
 import {useDispatch, useSelector} from "react-redux";
-import {fetchProfile, fetchProfileStatus, fetchStatusChange, onAddPost, onChangeStatus} from "./profileSlice.js";
+import {fetchProfile, fetchProfileStatus, fetchStatusChange, onAddPost} from "./profileSlice.js";
 
 import {useEffect, useState} from "react";
 
@@ -42,7 +42,7 @@ const Profile = () => {
     }, [dispatch, idToFetch]);
 
     useEffect(() => {
-       setLocalStatus(profileStatus);
+        setLocalStatus(profileStatus);
     }, [profileStatus]);
 
     if (loading) return <Preloader/>;

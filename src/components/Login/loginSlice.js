@@ -30,7 +30,7 @@ export const fetchAuthLogin = createAsyncThunk("users/fetchAuthLogin", async (_,
 
         return await response.json();
     } catch (error) {
-        return rejectWithValue(error.message);
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
@@ -53,7 +53,7 @@ export const fetchLoginWithData = createAsyncThunk("users/fetchLoginWithData", a
 
         return response.json();
     } catch (error) {
-        return rejectWithValue(error.message);
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
@@ -73,7 +73,7 @@ export const fetchLogout = createAsyncThunk("users/logout", async (_, {rejectWit
 
         return true;
     } catch(e) {
-        return rejectWithValue({error: e});
+        return rejectWithValue({status: 500, message: e.message});
     }
 })
 

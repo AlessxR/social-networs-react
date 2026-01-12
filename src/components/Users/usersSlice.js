@@ -31,13 +31,13 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async ({page = 1,
 
         // Если не норм - возвращаем ошибку
         if (!response.ok) {
-            return rejectWithValue({error: response.statusText});
+            return rejectWithValue({status: response.statusText});
         }
 
         // Возвращаем данные
         return await response.json();
     } catch (e) {
-        console.error(e);
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
@@ -62,7 +62,7 @@ export const getUserFollowed = createAsyncThunk("users/getUserFollowed", async (
 
         return data;
     } catch (e) {
-        return rejectWithValue({error: e});
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
@@ -89,7 +89,7 @@ export const followRequest = createAsyncThunk("users/followRequest", async (user
 
         return userId;
     } catch (e) {
-        return rejectWithValue({error: e});
+        return rejectWithValue({status: 500, message: e.message});
     }
 });
 
