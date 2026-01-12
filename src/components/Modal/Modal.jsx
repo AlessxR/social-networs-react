@@ -1,6 +1,6 @@
 import {Box, Modal, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {fetchChangeProfileInformation} from "../Profile/profileSlice.js";
 
 const style = {
@@ -24,6 +24,10 @@ const ProfileModal = ({open, onClose}) => {
     const [aboutMe, setAboutMe] = useState(null);
     const [lookingForAJob, setLookingForAJob] = useState(null);
     const [lookingForAJobDescription, setLookingForAJobDescription] = useState(null);
+
+    useEffect(() => {
+
+    }, [profile]);
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -80,12 +84,14 @@ const ProfileModal = ({open, onClose}) => {
                                        placeholder="Change about me info"/>
                             </div>
                         </div>
-                        <button onClick={dispatch(fetchChangeProfileInformation({
-                            fullName,
-                            aboutMe,
-                            lookingForAJob,
-                            lookingForAJobDescription
-                        }))} style={{textAlign: "center"}} type="submit">Save
+                        <button onClick={() => dispatch(fetchChangeProfileInformation(
+                            {
+                                fullName,
+                                aboutMe,
+                                lookingForAJob,
+                                lookingForAJobDescription
+                            }
+                        ))} style={{textAlign: "center"}} type="submit">Save
                         </button>
                     </form>
                 </Typography>

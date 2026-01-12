@@ -153,6 +153,19 @@ const profileSlice = createSlice({
             // state.loading = false;
             state.error = action.payload;
         });
+
+        //profile/changeProfile
+        builder.addCase(fetchChangeProfileInformation.pending, (state, action) => {
+            state.error = null;
+        });
+        builder.addCase(fetchChangeProfileInformation.fulfilled, (state, action) => {
+            state.profile.profile.fullName = action.payload;
+            state.profile.profile.aboutMe = action.payload;
+
+            state.profile.profile.lookingForAJob = action.payload;
+            state.profile.profile.lookingForAJobDescription = action.payload;
+
+        });
     }
 });
 
