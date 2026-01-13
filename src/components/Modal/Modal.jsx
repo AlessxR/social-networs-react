@@ -1,6 +1,6 @@
 import {Box, Modal, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import {fetchChangeProfileInformation, fetchProfile} from "../Profile/profileSlice.js";
 
 const style = {
@@ -18,6 +18,7 @@ const ProfileModal = ({open, onClose}) => {
     const dispatch = useDispatch();
 
     const profile = useSelector((state) => state.profile.profile);
+    const userId = useSelector((state) => state.auth.userId);
 
     const [fullName, setFullName] = useState(null);
     const [aboutMe, setAboutMe] = useState(null);
@@ -25,18 +26,21 @@ const ProfileModal = ({open, onClose}) => {
     const [lookingForAJobDescription, setLookingForAJobDescription] = useState(null);
 
     useEffect(() => {
-        if (profile) {
+        if (profile && open) {
             setFullName(profile.fullName || '');
             setAboutMe(profile.aboutMe || '');
             setLookingForAJob(profile.lookingForAJob || false);
             setLookingForAJobDescription(profile.lookingForAJobDescription || '');
         }
-    }, [profile]);
+    }, [profile, open]);
 
-
+    const handleClose = () => {
+        if (onClose) onClose(); // закрываем модалку в родителе
+        dispatch(fetchProfile(userId)); // один раз обновляем профиль
+    };
 
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
                 <Typography variant="h6">
                     Редактировать профиль
@@ -44,7 +48,6 @@ const ProfileModal = ({open, onClose}) => {
 
                 <Typography component="div" sx={{mt: 2}}>
                     <form onSubmit={(e) => e.preventDefault()}>
-
                         <div className="general" style={{display: "flex", flexDirection: "column"}}>
                             <h3>General info</h3>
 
@@ -56,7 +59,6 @@ const ProfileModal = ({open, onClose}) => {
                             <input onChange={e => setAboutMe(e.target.value)} type={"text"} value={aboutMe}
                                    placeholder="Change about me info"/>
                         </div>
-
                         <div className="job" style={{display: "flex", flexDirection: "column"}}>
                             <h3>Job status: </h3>
 
@@ -69,8 +71,6 @@ const ProfileModal = ({open, onClose}) => {
                             <input onChange={e => setLookingForAJobDescription(e.target.value)} type={"text"}
                                    value={lookingForAJobDescription} placeholder="Change about me info"/>
                         </div>
-
-
                         <div className="contacts">
                             <h3>Contacts</h3>
 
@@ -88,17 +88,12 @@ const ProfileModal = ({open, onClose}) => {
                                        placeholder="Change about me info"/>
                             </div>
                         </div>
-                        <button onClick={(e) => {
-                            e.preventDefault();
-                            (dispatch(fetchChangeProfileInformation(
-                                {
-                                    fullName,
-                                    aboutMe,
-                                    lookingForAJob,
-                                    lookingForAJobDescription
-                                }
-                            )))
-                        }} style={{textAlign: "center"}} type="submit">Save
+                        <button onClick={() => dispatch(fetchChangeProfileInformation({
+                            fullName: fullName,
+                            aboutMe: aboutMe,
+                            lookingForAJob: lookingForAJob,
+                            lookingForAJobDescription: lookingForAJobDescription,
+                        }))} style={{textAlign: "center"}} type="submit">Save
                         </button>
                     </form>
                 </Typography>

@@ -21,6 +21,11 @@ const Profile = () => {
     const [open, setOpen] = useState(false);
     const toggleModal = () => setOpen(prev => !prev);
 
+    const handleModalClose = () => {
+        setOpen(false); // закрываем модалку
+        dispatch(fetchProfile(idToFetch)); // обновляем профиль один раз
+    };
+
     const dispatch = useDispatch();
 
     const authUserId = useSelector(state => state.auth.userId);
@@ -67,7 +72,11 @@ const Profile = () => {
         }
     };
 
+
     const isOwner = idToFetch === authUserId;
+
+
+
 
     return (
         <div className="profile">
@@ -95,11 +104,10 @@ const Profile = () => {
 
                                 <ProfileModal
                                     open={open}
-                                    onClose={toggleModal}
+                                    onClose={handleModalClose}
                                 />
 
                                 <p style={{fontWeight: "bold"}}>{profile.fullName}</p>
-                                {/*{!edit && <span onDoubleClick={handleStatusEdit}>{profileStatus || "-----"}</span>}*/}
                                 {
                                     isOwner ? (
                                         edit ? (
