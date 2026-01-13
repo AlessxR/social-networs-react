@@ -1,7 +1,7 @@
 import {Box, Modal, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import {fetchChangeProfileInformation} from "../Profile/profileSlice.js";
+import {fetchChangeProfileInformation, fetchProfile} from "../Profile/profileSlice.js";
 
 const style = {
     position: 'absolute',
@@ -15,7 +15,6 @@ const style = {
 };
 
 const ProfileModal = ({open, onClose}) => {
-
     const dispatch = useDispatch();
 
     const profile = useSelector((state) => state.profile.profile);
@@ -26,8 +25,15 @@ const ProfileModal = ({open, onClose}) => {
     const [lookingForAJobDescription, setLookingForAJobDescription] = useState(null);
 
     useEffect(() => {
-
+        if (profile) {
+            setFullName(profile.fullName || '');
+            setAboutMe(profile.aboutMe || '');
+            setLookingForAJob(profile.lookingForAJob || false);
+            setLookingForAJobDescription(profile.lookingForAJobDescription || '');
+        }
     }, [profile]);
+
+
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -36,36 +42,34 @@ const ProfileModal = ({open, onClose}) => {
                     Редактировать профиль
                 </Typography>
 
-                <Typography sx={{mt: 2}}>
+                <Typography component="div" sx={{mt: 2}}>
                     <form onSubmit={(e) => e.preventDefault()}>
 
                         <div className="general" style={{display: "flex", flexDirection: "column"}}>
                             <h3>General info</h3>
 
                             <label htmlFor="">Your name: </label>
-                            <input onChange={e => setFullName(e.target.value)} type={"text"} value={profile.fullName}
+                            <input onChange={e => setFullName(e.target.value)} type={"text"} value={fullName}
                                    placeholder="Your name"/>
 
-                            <label htmlFor="">Your name:</label>
-                            <input onChange={e => setAboutMe(e.target.value)} type={"text"} value={profile.aboutMe}
+                            <label htmlFor="">Your information:</label>
+                            <input onChange={e => setAboutMe(e.target.value)} type={"text"} value={aboutMe}
                                    placeholder="Change about me info"/>
                         </div>
-
-                        <hr/>
 
                         <div className="job" style={{display: "flex", flexDirection: "column"}}>
                             <h3>Job status: </h3>
 
                             <label htmlFor="">Looking for a job:</label>
-                            <input onChange={e => setLookingForAJob(e.target.value)} type={"checkbox"}
-                                   value={profile.lookingForAJob} placeholder="Change about me info"/>
+                            <input onChange={e => setLookingForAJob(e.target.checked)} type={"checkbox"}
+                                   checked={lookingForAJob}
+                                   value={lookingForAJob} placeholder="Change about me info"/>
 
                             <label htmlFor="">Job description:</label>
                             <input onChange={e => setLookingForAJobDescription(e.target.value)} type={"text"}
-                                   value={profile.lookingForAJobDescription} placeholder="Change about me info"/>
+                                   value={lookingForAJobDescription} placeholder="Change about me info"/>
                         </div>
 
-                        <hr/>
 
                         <div className="contacts">
                             <h3>Contacts</h3>
@@ -84,14 +88,17 @@ const ProfileModal = ({open, onClose}) => {
                                        placeholder="Change about me info"/>
                             </div>
                         </div>
-                        <button onClick={() => dispatch(fetchChangeProfileInformation(
-                            {
-                                fullName,
-                                aboutMe,
-                                lookingForAJob,
-                                lookingForAJobDescription
-                            }
-                        ))} style={{textAlign: "center"}} type="submit">Save
+                        <button onClick={(e) => {
+                            e.preventDefault();
+                            (dispatch(fetchChangeProfileInformation(
+                                {
+                                    fullName,
+                                    aboutMe,
+                                    lookingForAJob,
+                                    lookingForAJobDescription
+                                }
+                            )))
+                        }} style={{textAlign: "center"}} type="submit">Save
                         </button>
                     </form>
                 </Typography>

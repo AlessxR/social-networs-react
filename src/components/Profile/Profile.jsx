@@ -3,11 +3,11 @@ import './Profile.css';
 import Post from "./Posts/Post/Post.jsx";
 
 import {useDispatch, useSelector} from "react-redux";
-import {fetchProfile, fetchProfileStatus, fetchStatusChange, onAddPost} from "./profileSlice.js";
+import {fetchProfile, fetchProfileStatus, fetchStatusChange} from "./profileSlice.js";
 
 import {useEffect, useState} from "react";
 
-import {useParams} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import Preloader from "../Preloader/Preloader.jsx";
 import {Button} from "@mui/material";
 import ProfileModal from "../Modal/Modal.jsx";
@@ -26,16 +26,17 @@ const Profile = () => {
     const authUserId = useSelector(state => state.auth.userId);
 
     const {userId} = useParams(); // берём id из URL
-    const idToFetch = userId || authUserId; // если нет id в URL, берём свой
+    const idToFetch = userId ? Number(userId) : authUserId; // если нет id в URL, берём свой
 
     const profile = useSelector(state => state.profile.profile);
 
     // Получаем статус пользователя
     const profileStatus = useSelector(state => state.profile.status);
 
+    const isAuth = useSelector(state => state.auth.isAuth);
+
     // Храним локальный статус, чтобы не делать миллиард запросов
     const [localStatus, setLocalStatus] = useState(profileStatus);
-
 
     const loading = useSelector(state => state.profile.isLoading);
 
@@ -51,7 +52,7 @@ const Profile = () => {
     }, [profileStatus]);
 
     if (loading) return <Preloader/>;
-
+    if (!isAuth) return <Navigate to={"/"}/>
 
     // Включаем режим редактирования
     const handleStatusEdit = () => setEdit(true);
@@ -66,11 +67,11 @@ const Profile = () => {
         }
     };
 
-    console.log(edit);
+    const isOwner = idToFetch === authUserId;
 
     return (
         <div className="profile">
-            <ProfileLogo />
+            <ProfileLogo/>
             <div className="profile__info">
                 {
                     profile && (
@@ -98,20 +99,28 @@ const Profile = () => {
                                 />
 
                                 <p style={{fontWeight: "bold"}}>{profile.fullName}</p>
-                                {!edit && <span onDoubleClick={handleStatusEdit}>{profileStatus || "-----"}</span>}
-                                {edit && <input
-                                    type="text"
-                                    value={localStatus}
-                                    /* Добавляем новый статус в локальный */
-                                    onChange={e => setLocalStatus(e.target.value)}
-                                    onBlur={handleBlur}
-                                    defaultValue={profileStatus}
-                                />}
+                                {/*{!edit && <span onDoubleClick={handleStatusEdit}>{profileStatus || "-----"}</span>}*/}
+                                {
+                                    isOwner ? (
+                                        edit ? (
+                                            <input
+                                                type="text"
+                                                value={localStatus}
+                                                onChange={e => setLocalStatus(e.target.value)}
+                                                onBlur={handleBlur}
+                                            />
+                                        ) : (
+                                            <span onDoubleClick={handleStatusEdit}>{profileStatus || "-----"}</span>
+                                        )
+                                    ) : (
+                                        <span>{profileStatus || "-----"}</span>
+                                    )
+                                }
                             </div>
                         </div>
                     )
                 }
-                <Posts  />
+                <Posts/>
             </div>
         </div>
     )
