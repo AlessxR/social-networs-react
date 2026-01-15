@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 
-const NotLogged= () => {
+const NotLogged = () => {
     const isAuth = useSelector(state => state.auth.isAuth);
 
     return (

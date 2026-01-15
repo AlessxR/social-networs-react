@@ -1,6 +1,6 @@
 import {Box, Modal, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {use, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {fetchChangeProfileInformation, fetchProfile} from "../Profile/profileSlice.js";
 
 const style = {

@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {fetchData} from "../../services/api.js";
 
 const initialState = {
     users: [],
@@ -11,59 +12,7 @@ const initialState = {
 
 // get users
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async ({page = 1, count = 10}, {rejectWithValue}) => {
-    // Делаем запрос на API
-    try {
-
-        // Тут можно получить данные с помощью query-string
-        // Query Parameters
-        // count: (integer - default: 10 - maximum: 100)
-        // page size (how many items will be returned in response)
-        //
-        // page: (integer - default: 1)
-        // number of portion of items
-        //
-        // term: (string)
-        // user name string for searching
-        // friend: (boolean)
-        // if true, then find only followed users, false - only not followed users, if omit parameter - all users
-
-        const response = await fetch(`/api/1.0/users?page=${page}&count=${count}`);
-
-        // Если не норм - возвращаем ошибку
-        if (!response.ok) {
-            return rejectWithValue({status: response.statusText});
-        }
-
-        // Возвращаем данные
-        return await response.json();
-    } catch (e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
-});
-
-// get follows
-export const getUserFollowed = createAsyncThunk("users/getUserFollowed", async (userId, {rejectWithValue}) => {
-    try {
-        const response = await fetch(`/api/1.0/follow/${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-        });
-
-        if (!response.ok) {
-            return rejectWithValue({error: response.statusText});
-        }
-
-        const data = await response.json();
-
-        console.log(data);
-
-        return data;
-    } catch (e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
+    return fetchData(`/api/1.0/users?page=${page}&count=${count}`, "GET", rejectWithValue);
 });
 
 export const followRequest = createAsyncThunk("users/followRequest", async (userId, {rejectWithValue}) => {
@@ -91,6 +40,7 @@ export const followRequest = createAsyncThunk("users/followRequest", async (user
     } catch (e) {
         return rejectWithValue({status: 500, message: e.message});
     }
+
 });
 
 export const followRemove = createAsyncThunk("users/followRemove", async (userId, {rejectWithValue}) => {

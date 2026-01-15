@@ -1,7 +1,5 @@
 import './Profile.css';
 
-import Post from "./Posts/Post/Post.jsx";
-
 import {useDispatch, useSelector} from "react-redux";
 import {fetchProfile, fetchProfileStatus, fetchStatusChange} from "./profileSlice.js";
 

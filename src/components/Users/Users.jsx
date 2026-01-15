@@ -32,11 +32,6 @@ const Users = () => {
 
     if (loading) return <Preloader/>;
 
-    // if (!isAuth)  {
-    //     return <Navigate to="/login" />
-    // }
-
-
     return (
         <div className="users">
             <h2>Users</h2>

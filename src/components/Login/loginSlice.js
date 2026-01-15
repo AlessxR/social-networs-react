@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {fetchData} from "../../services/api.js";
 
 const initialState = {
     userId: null,
@@ -12,69 +13,15 @@ const initialState = {
 }
 
 export const fetchAuthLogin = createAsyncThunk("auth/fetchAuthLogin", async (_, {rejectWithValue}) => {
-    try {
-        const response = await fetch(
-            "/api/1.0/auth/me",
-            {
-                credentials: "include",
-                method: "GET",
-                headers: {
-                    "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-                },
-            }
-        );
-
-        if (!response.ok) {
-            return rejectWithValue(response.statusText);
-        }
-
-        return await response.json();
-    } catch (error) {
-        return rejectWithValue({status: 500, message: error.message});
-    }
+    return fetchData("/api/1.0/auth/me", "GET", rejectWithValue);
 });
 
 export const fetchLoginWithData = createAsyncThunk("auth/fetchLoginWithData", async ({email, password}, {rejectWithValue}) => {
-    try {
-
-        const response = await fetch("/api/1.0/auth/login", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-            },
-            body: JSON.stringify({email, password})
-        });
-
-        if (!response.ok) {
-            return rejectWithValue(response.statusText);
-        }
-
-        return response.json();
-    } catch (error) {
-        return rejectWithValue({status: 500, message: error.message});
-    }
+    return fetchData("/api/1.0/auth/login", "POST", rejectWithValue, JSON.stringify({email, password}));
 });
 
 export const fetchLogout = createAsyncThunk("auth/logout", async (_, {rejectWithValue}) => {
-    try {
-        const response = await fetch("/api/1.0/auth/logout", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-            },
-        });
-
-        if (!response.ok) {
-            return rejectWithValue(response.statusText);
-        }
-
-        return true;
-    } catch(e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
+    return fetchData("/api/1.0/auth/logout", "POST", rejectWithValue);
 })
 
 const loginSlice = createSlice({
