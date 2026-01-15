@@ -4,38 +4,46 @@ import {fetchLoginWithData} from "./loginSlice.js";
 
 import './Login.css';
 
-import {useState} from "react";
 import Preloader from "../Preloader/Preloader.jsx";
 import {Navigate} from "react-router-dom";
+import {useForm} from "react-hook-form";
+import EmailElement from "./EmailElement/EmailElement.jsx";
+import PasswordElement from "./PasswordElement.jsx";
+
+import {schema} from "./schema.js";
+import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
 
 // To-Do: Нужно заредачить под React-Hook-Form!!!!
 const Login = () => {
     const dispatch = useDispatch();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const {
+        register, handleSubmit, formState: {
+            errors
+        }
+    } = useForm({
+        resolver: yupResolver(schema)
+    });
 
     const loading = useSelector(state => state.auth.loading);
     const isAuth = useSelector(state => state.auth.isAuth);
 
-    if (isAuth) return <Navigate to="/profile" />;
-    if (loading) return <Preloader />;
+    if (isAuth) return <Navigate to="/profile"/>;
+    if (loading) return <Preloader/>;
+
+    const onSubmit = (data) => {
+        console.log(data);
+        dispatch(fetchLoginWithData({...data}));
+    }
+
+    console.log(errors);
 
     return (
-        <form className={"login"} onSubmit={(e) => e.preventDefault()}>
-            {/* It doesnt work */}
-            {/*<button onClick={() => dispatch(fetchAuthLogin())}>AUTH ME</button>*/}
+        <form className={"login"} onSubmit={handleSubmit(onSubmit)}>
+            <EmailElement errors={errors} register={register}/>
+            <PasswordElement errors={errors} register={register}/>
 
-            <div className="login__email">
-                <label>Email</label>
-                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-
-            <div className="login__password">
-                <label>Password</label>
-                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <button onClick={() => dispatch(fetchLoginWithData({email, password}))}>Auth</button>
+            <button type={"submit"}>Auth</button>
         </form>
     );
 }
