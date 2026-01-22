@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {profileApi} from "../../services/api.js";
 
 const initialState = {
     posts: [],
@@ -10,91 +11,22 @@ const initialState = {
 
 // get profile
 export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (userId, {rejectWithValue}) => {
-    try {
-        const response = await fetch(`/api/1.0/profile/${userId}`);
-
-        if (!response.ok) {
-            return rejectWithValue({status: response.status, message: response.statusText});
-        }
-
-        const data = await response.json();
-
-        console.log(data);
-
-        return await data;
-    } catch (e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
+    return profileApi.getProfile(userId);
 });
 
 // get status
 export const fetchProfileStatus = createAsyncThunk("profile/fetchProfileStatus", async (userId, {rejectWithValue}) => {
-    try {
-        const response = await fetch(`/api/1.0/profile/status/${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-        });
-
-        if (!response.ok) {
-            return rejectWithValue({status: response.status});
-        }
-
-        return await response.json();
-    } catch (e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
+    return profileApi.getProfileStatus(userId);
 });
 
 // change status
 export const fetchStatusChange = createAsyncThunk("profile/fetchStatusChange", async (status, {rejectWithValue}) => {
-    try {
-        const response = await fetch("/api/1.0/profile/status", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-            },
-            credentials: "include",
-            body: JSON.stringify({status})
-        });
-
-        const data = await response.json();
-
-        if (data.resultCode !== 0) {
-            return rejectWithValue(data.messages[0] || "Ошибка обновления статуса");
-        }
-
-        return status;
-
-    } catch (e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
+    return profileApi.changeProfileStatus(status);
 });
 
 // change profile
 export const fetchChangeProfileInformation = createAsyncThunk("profile/fetchChangeProfileInformation", async ({fullName, aboutMe, lookingForAJob, lookingForAJobDescription}, {rejectWithValue}) => {
-    try {
-        const response = await fetch(`/api/1.0/profile`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-            },
-            credentials: "include",
-            body: JSON.stringify({fullName, aboutMe, lookingForAJob, lookingForAJobDescription})
-        });
-
-        const data = await response.json();
-
-        console.log(data);
-
-        return data;
-    } catch(e) {
-        return rejectWithValue({status: 500, message: e.message});
-    }
+    return profileApi.changeProfile({fullName, aboutMe, lookingForAJob, lookingForAJobDescription});
 });
 
 // reducer

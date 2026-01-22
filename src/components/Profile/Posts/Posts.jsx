@@ -7,22 +7,26 @@ const Posts = () => {
 
     const dispatch = useDispatch();
 
-    const [text, setText] = useState("");
+    const [text, setText] = useState(null);
 
     const posts = useSelector(state => state.profile.posts);
 
 
     const handleAdd = () => {
-        dispatch(onAddPost(text));
-        setText("");
+        if (!text) {
+            return;
+        } else {
+            dispatch(onAddPost(text));
+            setText("");
+        }
     }
 
     return (
         <div className="profile__posts">
-            <h3>My posts</h3>
+            <h3>Мои посты:</h3>
             <div className="profile__posts__add">
                 <textarea onChange={(e) => setText(e.target.value)} value={text}/>
-                <button onClick={handleAdd}>Add new post</button>
+                <button onClick={handleAdd}>Добавить новый пост</button>
             </div>
             <div className="profile__posts__data">
                 <Post/>

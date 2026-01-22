@@ -1,6 +1,5 @@
 import './Header.css';
 
-import {Link} from "react-router-dom";
 import LoginElement from "./Login/LoginElement.jsx";
 import Logo from "./Logo/Logo.jsx";
 

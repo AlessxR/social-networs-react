@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {fetchData} from "../../services/api.js";
+import {usersApi} from "../../services/api.js";
 
 const initialState = {
     users: [],
@@ -12,51 +12,30 @@ const initialState = {
 
 // get users
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async ({page = 1, count = 10}, {rejectWithValue}) => {
-    return fetchData(`/api/1.0/users?page=${page}&count=${count}`, "GET", rejectWithValue);
+    return usersApi.getUsers(page, count);
 });
 
 export const followRequest = createAsyncThunk("users/followRequest", async (userId, {rejectWithValue}) => {
-
     try {
-        const response = await fetch(`/api/1.0/follow/${userId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-                },
-                credentials: "include"
-            }
-        );
+        const res = await usersApi.follow(userId);
 
-        if (!response.ok) {
-            return rejectWithValue({error: response.statusText});
+        if (res.resultCode !== 0) {
+            return rejectWithValue(res.messages);
         }
-
-        const data = await response.json();
-
-        console.log(data);
 
         return userId;
     } catch (e) {
-        return rejectWithValue({status: 500, message: e.message});
+        return rejectWithValue(e.message);
     }
-
 });
 
 export const followRemove = createAsyncThunk("users/followRemove", async (userId, {rejectWithValue}) => {
     try {
-        const response = await fetch(`/api/1.0/follow/${userId}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "API-KEY": "94313c17-18b2-495e-8185-1e9cf7de7ac7"
-            },
-            credentials: "include"
-        });
+        const res = await usersApi.unfollow(userId);
 
-        const data = await response.json();
-
-        console.log(data);
+        if (res.resultCode !== 0) {
+            return rejectWithValue(res.messages);
+        }
 
         return userId;
     } catch (e) {
@@ -114,8 +93,8 @@ export const userSlice = createSlice({
 
         // removeFollow
         builder.addCase(followRemove.pending, (state, action) => {
-             state.isLoading = true;
-             state.error = null;
+            state.isLoading = true;
+            state.error = null;
         });
         builder.addCase(followRemove.fulfilled, (state, action) => {
             state.isLoading = false;

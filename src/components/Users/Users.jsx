@@ -60,8 +60,8 @@ const Users = () => {
                         </div>
 
                         <div className="users__infomation__detail">
-                            <span>Name: {user.name}</span>
-                            <span>Description: {user.status || "Статус не был задан!"}</span>
+                            <span>{user.name}</span>
+                            <span>{user.status || "Статус не был задан!"}</span>
                         </div>
                     </div>
                 ))

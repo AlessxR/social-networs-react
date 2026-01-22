@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {fetchData} from "../../services/api.js";
+import {authApi, fetchData} from "../../services/api.js";
 
 const initialState = {
     userId: null,
@@ -13,15 +13,15 @@ const initialState = {
 }
 
 export const fetchAuthLogin = createAsyncThunk("auth/fetchAuthLogin", async (_, {rejectWithValue}) => {
-    return fetchData("/api/1.0/auth/me", "GET", rejectWithValue);
+    return authApi.auth();
 });
 
 export const fetchLoginWithData = createAsyncThunk("auth/fetchLoginWithData", async ({email, password}, {rejectWithValue}) => {
-    return fetchData("/api/1.0/auth/login", "POST", rejectWithValue, JSON.stringify({email, password}));
+    return authApi.authWithData({email, password});
 });
 
 export const fetchLogout = createAsyncThunk("auth/logout", async (_, {rejectWithValue}) => {
-    return fetchData("/api/1.0/auth/logout", "POST", rejectWithValue);
+    return authApi.logout();
 })
 
 const loginSlice = createSlice({

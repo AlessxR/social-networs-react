@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from "react-redux";
 const LoginElement = () => {
     const dispatch = useDispatch();
     const isAuth = useSelector(state => state.auth.isAuth);
-    console.log("Current auth: " + isAuth);
 
     return (
         <div className="header__login">

@@ -1,10 +1,7 @@
 import {useState} from "react";
 
 const PasswordElement = ({register, errors}) => {
-
-
     const [password, setPassword] = useState("");
-
 
     return (
         <div className="login__password">

@@ -8,12 +8,11 @@ import Preloader from "../Preloader/Preloader.jsx";
 import {Navigate} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import EmailElement from "./EmailElement/EmailElement.jsx";
-import PasswordElement from "./PasswordElement.jsx";
+import PasswordElement from "./PasswordElement/PasswordElement.jsx";
 
 import {schema} from "./schema.js";
 import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
 
-// To-Do: Нужно заредачить под React-Hook-Form!!!!
 const Login = () => {
     const dispatch = useDispatch();
 
@@ -36,7 +35,6 @@ const Login = () => {
         dispatch(fetchLoginWithData({...data}));
     }
 
-    console.log(errors);
 
     return (
         <form className={"login"} onSubmit={handleSubmit(onSubmit)}>
