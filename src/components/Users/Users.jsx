@@ -44,7 +44,7 @@ const Users = () => {
                         <div className="users__infomation">
                             <Link to={`/profile/${user.id}`}>
                                 <img height={100}
-                                     src={user.photos.small || "https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png"}
+                                     src={user.photos.small || "https://sneg.top/uploads/posts/2023-06/1688078294_sneg-top-p-pustaya-avatarka-krasivo-3.png"}
                                      alt="Image"
                                 />
                             </Link>
