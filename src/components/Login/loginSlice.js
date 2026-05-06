@@ -9,7 +9,6 @@ const initialState = {
     error: null,
     isLoading: false,
     isAuth: false,
-    token: null,
 };
 
 export const fetchAuthLogin = createAsyncThunk(
@@ -31,15 +30,16 @@ export const fetchAuthLogin = createAsyncThunk(
 
 export const fetchLoginWithData = createAsyncThunk(
     'auth/fetchLoginWithData',
-    async ({ email, password }, { rejectWithValue }) => {
+    async ({ email, password }, { rejectWithValue, dispatch }) => {
         try {
             const res = await authApi.authWithData({ email, password });
+
 
             if (res.resultCode !== 0) {
                 return rejectWithValue(res.messages?.[0] || 'Login failed');
             }
 
-            localStorage.setItem('token', res.data.token);
+            await dispatch(fetchAuthLogin());
 
             return res;
         } catch (e) {
@@ -51,7 +51,17 @@ export const fetchLoginWithData = createAsyncThunk(
 export const fetchLogout = createAsyncThunk(
     'auth/logout',
     async (_, { rejectWithValue }) => {
-        return authApi.logout();
+        try {
+            const res = await authApi.logout();
+
+            if (res.resultCode !== 0) {
+                return rejectWithValue(res.messages?.[0] || 'Logout failed');
+            }
+
+            return res;
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
     },
 );
 
@@ -93,7 +103,6 @@ const loginSlice = createSlice({
             state.isLoading = false;
 
             state.userId = action.payload.data.userId;
-            state.token = action.payload.data.token;
             state.isAuth = true;
 
             state.error = null;
@@ -116,9 +125,6 @@ const loginSlice = createSlice({
             state.userId = null;
             state.login = null;
             state.email = null;
-            state.password = null;
-            localStorage.removeItem('token');
-            state.token = null;
 
             state.isAuth = false;
         });

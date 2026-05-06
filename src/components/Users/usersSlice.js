@@ -14,9 +14,12 @@ const initialState = {
 export const fetchUsers = createAsyncThunk(
     'users/fetchUsers',
     async ({ page = 1, count = 10 }, { rejectWithValue }) => {
-        return usersApi.getUsers(page, count);
-    },
-);
+        try {
+            return usersApi.getUsers(page, count);
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
+    });
 
 export const followRequest = createAsyncThunk(
     'users/followRequest',

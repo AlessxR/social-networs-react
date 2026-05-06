@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import Post from './Post/Post.jsx';
 import { onAddPost } from '../profileSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +6,7 @@ import { useState } from 'react';
 const Posts = () => {
     const dispatch = useDispatch();
 
-    const [text, setText] = useState(null);
+    const [text, setText] = useState('');
 
     const posts = useSelector((state) => state.profile.posts);
 
@@ -16,7 +14,7 @@ const Posts = () => {
         if (!text) {
             return;
         } else {
-            dispatch(onAddPost(text));
+            dispatch(onAddPost({ id: crypto.randomUUID(), text }));
             setText('');
         }
     };
@@ -32,9 +30,8 @@ const Posts = () => {
                 <button onClick={handleAdd}>Добавить новый пост</button>
             </div>
             <div className="profile__posts__data">
-                <Post />
                 {posts.map((post) => (
-                    <Post key={uuidv4()} post={post} />
+                    <Post key={post.id} post={post.text} />
                 ))}
             </div>
         </div>

@@ -1,5 +1,5 @@
 
-const Post = ({post}) => {
+const Post = ({ post }) => {
 
     return (
         <div>

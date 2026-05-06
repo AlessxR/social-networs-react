@@ -13,7 +13,11 @@ const initialState = {
 export const fetchProfile = createAsyncThunk(
     'profile/fetchProfile',
     async (userId, { rejectWithValue }) => {
-        return profileApi.getProfile(userId);
+        try {
+            return profileApi.getProfile(userId);
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
     },
 );
 
@@ -21,7 +25,11 @@ export const fetchProfile = createAsyncThunk(
 export const fetchProfileStatus = createAsyncThunk(
     'profile/fetchProfileStatus',
     async (userId, { rejectWithValue }) => {
-        return profileApi.getProfileStatus(userId);
+        try {
+            return profileApi.getProfileStatus(userId);
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
     },
 );
 
@@ -29,7 +37,19 @@ export const fetchProfileStatus = createAsyncThunk(
 export const fetchStatusChange = createAsyncThunk(
     'profile/fetchStatusChange',
     async (status, { rejectWithValue }) => {
-        return profileApi.changeProfileStatus(status);
+        try {
+            const res = await profileApi.changeProfileStatus(status);
+
+            if (res.resultCode !== 0) {
+                return rejectWithValue(
+                    res.messages?.[0] || 'Change status failed',
+                );
+            }
+
+            return res;
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
     },
 );
 
@@ -40,12 +60,22 @@ export const fetchChangeProfileInformation = createAsyncThunk(
         { fullName, aboutMe, lookingForAJob, lookingForAJobDescription },
         { rejectWithValue },
     ) => {
-        return profileApi.changeProfile({
-            fullName,
-            aboutMe,
-            lookingForAJob,
-            lookingForAJobDescription,
-        });
+        try {
+            const res = await profileApi.changeProfile({
+                fullName,
+                aboutMe,
+                lookingForAJob,
+                lookingForAJobDescription,
+            });
+
+            if (res.resultCode !== 0) {
+                return rejectWithValue(
+                    res.messages?.[0] || 'Change information failed!',
+                );
+            }
+        } catch (e) {
+            return rejectWithValue(e.message);
+        }
     },
 );
 
@@ -57,7 +87,7 @@ const profileSlice = createSlice({
         onAddPost: (state, action) => {
             state.posts.push(action.payload);
         },
-        onChangeStatus: (state, action) => {
+        onChangeStatus: (state) => {
             state.changeStatus = !state.changeStatus;
         },
     },
@@ -98,7 +128,7 @@ const profileSlice = createSlice({
         });
         builder.addCase(fetchStatusChange.fulfilled, (state, action) => {
             // state.loading = false;
-            state.status = action.payload;
+            state.status = action.payload.data.status;
         });
         builder.addCase(fetchStatusChange.rejected, (state, action) => {
             // state.loading = false;
@@ -112,12 +142,13 @@ const profileSlice = createSlice({
         builder.addCase(
             fetchChangeProfileInformation.fulfilled,
             (state, action) => {
-                state.profile.profile.fullName = action.payload;
-                state.profile.profile.aboutMe = action.payload;
+                state.profile.profile.fullName = action.payload.data.fullName;
+                state.profile.profile.aboutMe = action.payload.data.aboutMe;
 
-                state.profile.profile.lookingForAJob = action.payload;
+                state.profile.profile.lookingForAJob =
+                    action.payload.data.lookingForAJob;
                 state.profile.profile.lookingForAJobDescription =
-                    action.payload;
+                    action.payload.data.lookingForAJobDescription;
             },
         );
         builder.addCase(

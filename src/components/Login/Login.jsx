@@ -12,7 +12,7 @@ import PasswordElement from './PasswordElement/PasswordElement.jsx';
 import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 
 import { schema } from './schema.js';
-import { yupResolver } from '@hookform/resolvers/yup/src/index.js';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -31,21 +31,23 @@ const Login = () => {
 
     if (isAuth) return <Navigate to="/profile" />;
     if (loading) return <Preloader />;
-    if (error) return <ErrorMessage message={error} />;
 
     const onSubmit = (data) => {
         dispatch(fetchLoginWithData({ ...data }));
     };
 
     return (
-        <form className={'login'} onSubmit={handleSubmit(onSubmit)}>
-            <EmailElement errors={errors} register={register} />
-            <PasswordElement errors={errors} register={register} />
+        <>
+            {error && <ErrorMessage message={error} />}
+            <form className={'login'} onSubmit={handleSubmit(onSubmit)}>
+                <EmailElement errors={errors} register={register} />
+                <PasswordElement errors={errors} register={register} />
 
-            <button disabled={loading} type={'submit'}>
-                Auth
-            </button>
-        </form>
+                <button disabled={loading} type={'submit'}>
+                    Auth
+                </button>
+            </form>
+        </>
     );
 };
 

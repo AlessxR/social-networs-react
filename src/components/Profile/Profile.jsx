@@ -58,7 +58,6 @@ const Profile = () => {
     }, [profileStatus]);
 
     if (loading) return <Preloader />;
-    if (!isAuth) return <Navigate to={'/'} />;
 
     // Включаем режим редактирования
     const handleStatusEdit = () => setEdit(true);

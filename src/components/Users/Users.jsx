@@ -28,7 +28,7 @@ const Users = () => {
 
     useEffect(() => {
         dispatch(fetchUsers({ page, count }));
-    }, [dispatch, page, count]);
+    }, [dispatch, page]);
 
     const handlePageChange = (event, value) => {
         dispatch(changePage(value));
