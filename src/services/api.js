@@ -16,18 +16,6 @@ instance.interceptors.response.use(
     },
 );
 
-instance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    } else {
-        delete config.headers.Authorization;
-    }
-
-    return config;
-});
-
 export const usersApi = {
     getUsers(page = 1, count = 10) {
         return instance.get(`users?page=${page}&count=${count}`);
