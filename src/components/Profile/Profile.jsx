@@ -58,9 +58,15 @@ const Profile = () => {
     }, [profileStatus]);
 
     if (loading) return <Preloader />;
+    if (!isAuth) return <Navigate to="/login" />;
+
+    const isOwner = idToFetch === authUserId;
 
     // Включаем режим редактирования
-    const handleStatusEdit = () => setEdit(true);
+    const handleStatusEdit = () => {
+        if (!isOwner) return;
+        setEdit(true);
+    };
 
     // Убираем режим редактирования
     const handleBlur = () => {
@@ -71,8 +77,6 @@ const Profile = () => {
             dispatch(fetchStatusChange(localStatus));
         }
     };
-
-    const isOwner = idToFetch === authUserId;
 
     return (
         <div className="profile">
@@ -93,19 +97,22 @@ const Profile = () => {
                         </div>
 
                         <div className="porofile__info__about__descr">
-                            <Button
-                                onClick={toggleModal}
-                                size="small"
-                                variant="outlined"
-                                color="success"
-                            >
-                                Больше информации о профиле
-                            </Button>
+                            <>
+                                <Button
+                                    onClick={toggleModal}
+                                    size="small"
+                                    variant="outlined"
+                                    color="success"
+                                >
+                                    Больше информации о профиле
+                                </Button>
 
-                            <ProfileModal
-                                open={open}
-                                onClose={handleModalClose}
-                            />
+                                <ProfileModal
+                                    open={open}
+                                    onClose={handleModalClose}
+                                    isOwner={isOwner}
+                                />
+                            </>
 
                             <p style={{ fontWeight: 'bold' }}>
                                 {profile.fullName}

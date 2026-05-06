@@ -34,7 +34,6 @@ export const fetchLoginWithData = createAsyncThunk(
         try {
             const res = await authApi.authWithData({ email, password });
 
-
             if (res.resultCode !== 0) {
                 return rejectWithValue(res.messages?.[0] || 'Login failed');
             }
@@ -129,6 +128,7 @@ const loginSlice = createSlice({
             state.isAuth = false;
         });
         builder.addCase(fetchLogout.rejected, (state, action) => {
+            state.isLoading = false;
             state.error = action.payload;
         });
     },

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import {
     fetchChangeProfileInformation,
-    fetchProfile,
 } from '../Profile/profileSlice.js';
 
 const style = {
@@ -17,16 +16,16 @@ const style = {
     p: 4,
 };
 
-const ProfileModal = ({ open, onClose }) => {
+const ProfileModal = ({ open, onClose, isOwner }) => {
     const dispatch = useDispatch();
 
     const profile = useSelector((state) => state.profile.profile);
-    const userId = useSelector((state) => state.auth.userId);
 
     const [fullName, setFullName] = useState('');
     const [aboutMe, setAboutMe] = useState('');
     const [lookingForAJob, setLookingForAJob] = useState(false);
-    const [lookingForAJobDescription, setLookingForAJobDescription] = useState('');
+    const [lookingForAJobDescription, setLookingForAJobDescription] =
+        useState('');
 
     useEffect(() => {
         if (profile && open) {
@@ -41,7 +40,6 @@ const ProfileModal = ({ open, onClose }) => {
 
     const handleClose = () => {
         if (onClose) onClose(); // закрываем модалку в родителе
-        dispatch(fetchProfile(userId)); // один раз обновляем профиль
     };
 
     return (
@@ -62,6 +60,7 @@ const ProfileModal = ({ open, onClose }) => {
                                 onChange={(e) => setFullName(e.target.value)}
                                 type={'text'}
                                 value={fullName}
+                                disabled={!isOwner}
                                 placeholder="Your name"
                             />
 
@@ -70,6 +69,7 @@ const ProfileModal = ({ open, onClose }) => {
                                 onChange={(e) => setAboutMe(e.target.value)}
                                 type={'text'}
                                 value={aboutMe}
+                                disabled={!isOwner}
                                 placeholder="Change about me info"
                             />
                         </div>
@@ -84,6 +84,7 @@ const ProfileModal = ({ open, onClose }) => {
                                 onChange={(e) =>
                                     setLookingForAJob(e.target.checked)
                                 }
+                                disabled={!isOwner}
                                 type={'checkbox'}
                                 checked={lookingForAJob}
                                 value={lookingForAJob}
@@ -95,6 +96,7 @@ const ProfileModal = ({ open, onClose }) => {
                                 onChange={(e) =>
                                     setLookingForAJobDescription(e.target.value)
                                 }
+                                disabled={!isOwner}
                                 type={'text'}
                                 value={lookingForAJobDescription}
                                 placeholder="Change about me info"
@@ -134,23 +136,28 @@ const ProfileModal = ({ open, onClose }) => {
                                 />
                             </div>
                         </div>
-                        <button
-                            onClick={() =>
-                                dispatch(
-                                    fetchChangeProfileInformation({
-                                        fullName: fullName,
-                                        aboutMe: aboutMe,
-                                        lookingForAJob: lookingForAJob,
-                                        lookingForAJobDescription:
+                        {isOwner && (
+                            <button
+                                onClick={() =>
+                                    dispatch(
+                                        fetchChangeProfileInformation({
+                                            ...profile,
+                                            fullName,
+                                            aboutMe,
+                                            lookingForAJob,
                                             lookingForAJobDescription,
-                                    }),
-                                )
-                            }
-                            style={{ textAlign: 'center' }}
-                            type="submit"
-                        >
-                            Save
-                        </button>
+                                            contacts: {
+                                                ...profile.contacts,
+                                            },
+                                        }),
+                                    )
+                                }
+                                style={{ textAlign: 'center' }}
+                                type="submit"
+                            >
+                                Save
+                            </button>
+                        )}
                     </form>
                 </Typography>
             </Box>

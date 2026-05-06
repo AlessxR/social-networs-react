@@ -101,7 +101,7 @@ export const userSlice = createSlice({
         });
 
         // removeFollow
-        builder.addCase(followRemove.pending, (state, action) => {
+        builder.addCase(followRemove.pending, (state) => {
             state.isLoading = true;
             state.error = null;
         });

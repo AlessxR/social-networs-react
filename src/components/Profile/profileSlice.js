@@ -46,7 +46,7 @@ export const fetchStatusChange = createAsyncThunk(
                 );
             }
 
-            return res;
+            return status;
         } catch (e) {
             return rejectWithValue(e.message);
         }
@@ -56,23 +56,17 @@ export const fetchStatusChange = createAsyncThunk(
 // change profile
 export const fetchChangeProfileInformation = createAsyncThunk(
     'profile/fetchChangeProfileInformation',
-    async (
-        { fullName, aboutMe, lookingForAJob, lookingForAJobDescription },
-        { rejectWithValue },
-    ) => {
+    async (profileData, { rejectWithValue }) => {
         try {
-            const res = await profileApi.changeProfile({
-                fullName,
-                aboutMe,
-                lookingForAJob,
-                lookingForAJobDescription,
-            });
+            const res = await profileApi.changeProfile(profileData);
 
             if (res.resultCode !== 0) {
                 return rejectWithValue(
                     res.messages?.[0] || 'Change information failed!',
                 );
             }
+
+            return profileData;
         } catch (e) {
             return rejectWithValue(e.message);
         }
@@ -128,7 +122,7 @@ const profileSlice = createSlice({
         });
         builder.addCase(fetchStatusChange.fulfilled, (state, action) => {
             // state.loading = false;
-            state.status = action.payload.data.status;
+            state.status = action.payload;
         });
         builder.addCase(fetchStatusChange.rejected, (state, action) => {
             // state.loading = false;
@@ -142,13 +136,7 @@ const profileSlice = createSlice({
         builder.addCase(
             fetchChangeProfileInformation.fulfilled,
             (state, action) => {
-                state.profile.profile.fullName = action.payload.data.fullName;
-                state.profile.profile.aboutMe = action.payload.data.aboutMe;
-
-                state.profile.profile.lookingForAJob =
-                    action.payload.data.lookingForAJob;
-                state.profile.profile.lookingForAJobDescription =
-                    action.payload.data.lookingForAJobDescription;
+                state.profile = action.payload;
             },
         );
         builder.addCase(
