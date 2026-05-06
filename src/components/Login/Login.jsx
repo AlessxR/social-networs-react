@@ -1,49 +1,52 @@
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
-import {fetchLoginWithData} from "./loginSlice.js";
+import { fetchLoginWithData } from './loginSlice.js';
 
 import './Login.css';
 
-import Preloader from "../Preloader/Preloader.jsx";
-import {Navigate} from "react-router-dom";
-import {useForm} from "react-hook-form";
-import EmailElement from "./EmailElement/EmailElement.jsx";
-import PasswordElement from "./PasswordElement/PasswordElement.jsx";
+import Preloader from '../Preloader/Preloader.jsx';
+import { Navigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import EmailElement from './EmailElement/EmailElement.jsx';
+import PasswordElement from './PasswordElement/PasswordElement.jsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 
-import {schema} from "./schema.js";
-import {yupResolver} from "@hookform/resolvers/yup/src/index.js";
+import { schema } from './schema.js';
+import { yupResolver } from '@hookform/resolvers/yup/src/index.js';
 
 const Login = () => {
     const dispatch = useDispatch();
 
     const {
-        register, handleSubmit, formState: {
-            errors
-        }
+        register,
+        handleSubmit,
+        formState: { errors },
     } = useForm({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(schema),
     });
 
-    const loading = useSelector(state => state.auth.loading);
-    const isAuth = useSelector(state => state.auth.isAuth);
+    const loading = useSelector((state) => state.auth.isLoading);
+    const error = useSelector((state) => state.auth.error);
+    const isAuth = useSelector((state) => state.auth.isAuth);
 
-    if (isAuth) return <Navigate to="/profile"/>;
-    if (loading) return <Preloader/>;
+    if (isAuth) return <Navigate to="/profile" />;
+    if (loading) return <Preloader />;
+    if (error) return <ErrorMessage message={error} />;
 
     const onSubmit = (data) => {
-        console.log(data);
-        dispatch(fetchLoginWithData({...data}));
-    }
-
+        dispatch(fetchLoginWithData({ ...data }));
+    };
 
     return (
-        <form className={"login"} onSubmit={handleSubmit(onSubmit)}>
-            <EmailElement errors={errors} register={register}/>
-            <PasswordElement errors={errors} register={register}/>
+        <form className={'login'} onSubmit={handleSubmit(onSubmit)}>
+            <EmailElement errors={errors} register={register} />
+            <PasswordElement errors={errors} register={register} />
 
-            <button type={"submit"}>Auth</button>
+            <button disabled={loading} type={'submit'}>
+                Auth
+            </button>
         </form>
     );
-}
+};
 
 export default Login;

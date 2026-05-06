@@ -1,0 +1,80 @@
+.error-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease-in-out;
+    max-width: 400px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.error-message__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.error-message__icon {
+    color: #721c24;
+    font-size: 20px;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.error-message__text {
+    color: #721c24;
+    font-size: 14px;
+    font-weight: 500;
+    flex: 1;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.error-message__close {
+    background: none;
+    border: none;
+    color: #721c24;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+    margin-top: -2px;
+}
+
+.error-message__close:hover,
+.error-message__close:focus {
+    opacity: 1;
+    outline: 2px solid #721c24;
+    outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+    .error-message {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        max-width: none;
+    }
+}

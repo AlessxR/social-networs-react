@@ -1,50 +1,69 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {profileApi} from "../../services/api.js";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { profileApi } from '../../services/api.js';
 
 const initialState = {
     posts: [],
-    status: "",
+    status: '',
     isLoading: false,
     error: null,
     profile: null,
-}
+};
 
 // get profile
-export const fetchProfile = createAsyncThunk("profile/fetchProfile", async (userId, {rejectWithValue}) => {
-    return profileApi.getProfile(userId);
-});
+export const fetchProfile = createAsyncThunk(
+    'profile/fetchProfile',
+    async (userId, { rejectWithValue }) => {
+        return profileApi.getProfile(userId);
+    },
+);
 
 // get status
-export const fetchProfileStatus = createAsyncThunk("profile/fetchProfileStatus", async (userId, {rejectWithValue}) => {
-    return profileApi.getProfileStatus(userId);
-});
+export const fetchProfileStatus = createAsyncThunk(
+    'profile/fetchProfileStatus',
+    async (userId, { rejectWithValue }) => {
+        return profileApi.getProfileStatus(userId);
+    },
+);
 
 // change status
-export const fetchStatusChange = createAsyncThunk("profile/fetchStatusChange", async (status, {rejectWithValue}) => {
-    return profileApi.changeProfileStatus(status);
-});
+export const fetchStatusChange = createAsyncThunk(
+    'profile/fetchStatusChange',
+    async (status, { rejectWithValue }) => {
+        return profileApi.changeProfileStatus(status);
+    },
+);
 
 // change profile
-export const fetchChangeProfileInformation = createAsyncThunk("profile/fetchChangeProfileInformation", async ({fullName, aboutMe, lookingForAJob, lookingForAJobDescription}, {rejectWithValue}) => {
-    return profileApi.changeProfile({fullName, aboutMe, lookingForAJob, lookingForAJobDescription});
-});
+export const fetchChangeProfileInformation = createAsyncThunk(
+    'profile/fetchChangeProfileInformation',
+    async (
+        { fullName, aboutMe, lookingForAJob, lookingForAJobDescription },
+        { rejectWithValue },
+    ) => {
+        return profileApi.changeProfile({
+            fullName,
+            aboutMe,
+            lookingForAJob,
+            lookingForAJobDescription,
+        });
+    },
+);
 
 // reducer
 const profileSlice = createSlice({
-    name: "profile",
+    name: 'profile',
     initialState,
     reducers: {
         onAddPost: (state, action) => {
-            state.posts.push(action.payload)
+            state.posts.push(action.payload);
         },
         onChangeStatus: (state, action) => {
             state.changeStatus = !state.changeStatus;
-        }
+        },
     },
     extraReducers: (builder) => {
-
         // profile/fetchProfile
-        builder.addCase(fetchProfile.pending, state => {
+        builder.addCase(fetchProfile.pending, (state) => {
             state.isLoading = true;
             state.error = null;
         });
@@ -55,11 +74,11 @@ const profileSlice = createSlice({
         });
         builder.addCase(fetchProfile.rejected, (state, action) => {
             state.isLoading = false;
-            state.loading = action.payload;
+            state.error = action.payload;
         });
 
         // profile/fetchProfileStatus
-        builder.addCase(fetchProfileStatus.pending,  (state, action) => {
+        builder.addCase(fetchProfileStatus.pending, (state) => {
             state.isLoading = true;
             state.error = null;
         });
@@ -73,7 +92,7 @@ const profileSlice = createSlice({
         });
 
         // profile/fetchStatusChange
-        builder.addCase(fetchStatusChange.pending, (state, action) => {
+        builder.addCase(fetchStatusChange.pending, (state) => {
             // state.loading = true;
             state.error = null;
         });
@@ -87,23 +106,29 @@ const profileSlice = createSlice({
         });
 
         //profile/changeProfile
-        builder.addCase(fetchChangeProfileInformation.pending, (state, action) => {
+        builder.addCase(fetchChangeProfileInformation.pending, (state) => {
             state.error = null;
         });
-        builder.addCase(fetchChangeProfileInformation.fulfilled, (state, action) => {
-            state.profile.profile.fullName = action.payload;
-            state.profile.profile.aboutMe = action.payload;
+        builder.addCase(
+            fetchChangeProfileInformation.fulfilled,
+            (state, action) => {
+                state.profile.profile.fullName = action.payload;
+                state.profile.profile.aboutMe = action.payload;
 
-            state.profile.profile.lookingForAJob = action.payload;
-            state.profile.profile.lookingForAJobDescription = action.payload;
-
-        });
-        builder.addCase(fetchChangeProfileInformation.rejected, (state, action) => {
-            state.error = action.payload;
-        });
-    }
+                state.profile.profile.lookingForAJob = action.payload;
+                state.profile.profile.lookingForAJobDescription =
+                    action.payload;
+            },
+        );
+        builder.addCase(
+            fetchChangeProfileInformation.rejected,
+            (state, action) => {
+                state.error = action.payload;
+            },
+        );
+    },
 });
 
 export default profileSlice.reducer;
 
-export const {onAddPost, onChangeStatus} = profileSlice.actions;
+export const { onAddPost, onChangeStatus } = profileSlice.actions;

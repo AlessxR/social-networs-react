@@ -1,14 +1,19 @@
 import './Users.css';
 
-import {useEffect} from "react";
+import { useEffect } from 'react';
 
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
-import {changePage, fetchUsers, followRemove, followRequest} from "./usersSlice.js";
+import {
+    changePage,
+    fetchUsers,
+    followRemove,
+    followRequest,
+} from './usersSlice.js';
 
-import {Link} from "react-router-dom";
-import Preloader from "../Preloader/Preloader.jsx";
-import {Pagination} from "@mui/material";
+import { Link } from 'react-router-dom';
+import Preloader from '../Preloader/Preloader.jsx';
+import { Pagination } from '@mui/material';
 
 const Users = () => {
     const dispatch = useDispatch();
@@ -22,52 +27,61 @@ const Users = () => {
     const totalPages = Math.ceil(totalCount / count); // Сколько в общем страниц с пользователями
 
     useEffect(() => {
-        dispatch(fetchUsers({page, count}));
+        dispatch(fetchUsers({ page, count }));
     }, [dispatch, page, count]);
-
 
     const handlePageChange = (event, value) => {
         dispatch(changePage(value));
-    }
+    };
 
-    if (loading) return <Preloader/>;
+    if (loading) return <Preloader />;
 
     return (
         <div className="users">
             <h2>Users</h2>
             {/*<button onClick={() => dispatch(fetchUsers())}>Get Data</button>*/}
-            <Pagination defaultPage={1} count={totalPages} page={page} onChange={handlePageChange} color={"secondary"}/>
+            <Pagination
+                defaultPage={1}
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color={'secondary'}
+            />
 
-            {
-                users.map(user => (
-                    <div key={user.id} className="users__container">
-                        <div className="users__infomation">
-                            <Link to={`/profile/${user.id}`}>
-                                <img height={100}
-                                     src={user.photos.small || "https://sneg.top/uploads/posts/2023-06/1688078294_sneg-top-p-pustaya-avatarka-krasivo-3.png"}
-                                     alt="Image"
-                                />
-                            </Link>
-                            <button onClick={() => {
+            {users.map((user) => (
+                <div key={user.id} className="users__container">
+                    <div className="users__infomation">
+                        <Link to={`/profile/${user.id}`}>
+                            <img
+                                height={100}
+                                src={
+                                    user.photos.small ||
+                                    'https://sneg.top/uploads/posts/2023-06/1688078294_sneg-top-p-pustaya-avatarka-krasivo-3.png'
+                                }
+                                alt="Image"
+                            />
+                        </Link>
+                        <button
+                            onClick={() => {
                                 if (user.followed) {
                                     dispatch(followRemove(user.id));
                                 } else {
                                     dispatch(followRequest(user.id));
                                 }
-                            }}>
-                                {user.followed ? "Unfollow" : "Follow"}
-                            </button>
-                        </div>
-
-                        <div className="users__infomation__detail">
-                            <span>{user.name}</span>
-                            <span>{user.status || "Статус не был задан!"}</span>
-                        </div>
+                            }}
+                        >
+                            {user.followed ? 'Unfollow' : 'Follow'}
+                        </button>
                     </div>
-                ))
-            }
+
+                    <div className="users__infomation__detail">
+                        <span>{user.name}</span>
+                        <span>{user.status || '----'}</span>
+                    </div>
+                </div>
+            ))}
         </div>
     );
-}
+};
 
 export default Users;

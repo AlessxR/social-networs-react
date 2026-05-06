@@ -9,7 +9,7 @@ const ProfileLogo = () => {
                 className="profile__logo-img"
             />
         </div>
-    )
+    );
 }
 
 export default ProfileLogo;
