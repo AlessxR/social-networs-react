@@ -40,6 +40,16 @@ const Login = () => {
         <>
             {error && <ErrorMessage message={error} />}
             <form className={'login'} onSubmit={handleSubmit(onSubmit)}>
+                <p
+                    style={{
+                        color: 'red',
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                    }}
+                >
+                    For testing you can use this email and password: <br />
+                    oleksandrrq@gmail.com <br /> Sasha123@
+                </p>
                 <EmailElement errors={errors} register={register} />
                 <PasswordElement errors={errors} register={register} />
 
